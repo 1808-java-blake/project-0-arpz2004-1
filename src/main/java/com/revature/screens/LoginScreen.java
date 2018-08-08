@@ -25,7 +25,7 @@ public class LoginScreen implements Screen {
 			return new HomeScreen();
 		}
 
-		System.out.println("unable to login");
+		System.out.println("Invalid Username or Password");
 		return this;
 	}
 
