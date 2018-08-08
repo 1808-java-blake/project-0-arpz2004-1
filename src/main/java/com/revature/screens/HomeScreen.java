@@ -30,17 +30,13 @@ public class HomeScreen implements Screen {
 		} while (!validSelection);
 		switch (selection) {
 		case "1":
-			System.out.println("selected 1 not yet implemented that screen");
-			break;
+			return new DepositMoneyScreen();
 		case "2":
-			System.out.println("selected 2 not yet implemented that screen");
-			break;
+			return new WithdrawMoneyScreen();
 		case "3":
-			System.out.println("selected 3 not yet implemented that screen");
-			break;
+			return new AccountBalanceScreen();
 		case "4":
-			System.out.println("selected 4 not yet implemented that screen");
-			break;
+			return new TransactionHistoryScreen();
 		case "5":
 			return new LoginScreen();
 		}
