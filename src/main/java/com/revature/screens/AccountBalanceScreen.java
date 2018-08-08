@@ -10,6 +10,7 @@ public class AccountBalanceScreen implements Screen {
 
 	@Override
 	public Screen start() {
+		bad.findByUsername("a");
 		System.out.println("Your bank account balance is $0.");
 		System.out.println("Press enter to return to home screen.");
 		scan.nextLine();

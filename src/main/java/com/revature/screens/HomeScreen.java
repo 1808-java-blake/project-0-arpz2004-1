@@ -2,6 +2,8 @@ package com.revature.screens;
 
 import java.util.Scanner;
 
+import com.revature.beans.User;
+
 public class HomeScreen implements Screen {
 
 	private Scanner scan = new Scanner(System.in);
@@ -38,6 +40,7 @@ public class HomeScreen implements Screen {
 		case "4":
 			return new TransactionHistoryScreen();
 		case "5":
+			User.setCurrentUser(null);
 			return new LoginScreen();
 		}
 		return this;

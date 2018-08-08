@@ -12,6 +12,7 @@ public class User implements Serializable {
 	private String firstName;
 	private String lastName;
 	private int age;
+	private static User currentUser;
 
 	public User() {
 		super();
@@ -27,6 +28,14 @@ public class User implements Serializable {
 		this.age = age;
 	}
 
+	public static void setCurrentUser(User currentUser) {
+		User.currentUser = currentUser;
+	}
+	
+	public static User getCurrentUser() {
+		return currentUser;
+	}
+	
 	public String getUsername() {
 		return username;
 	}
