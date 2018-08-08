@@ -20,7 +20,6 @@ public class UserSerializer implements UserDao {
 			return;
 		}
 		File f = new File("src/main/resources/users/" + u.getUsername() + ".txt");
-		System.out.println(f.getName());
 		if (f.exists()) {
 			return;
 		}

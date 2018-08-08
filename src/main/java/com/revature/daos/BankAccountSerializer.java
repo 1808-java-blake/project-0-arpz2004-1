@@ -49,7 +49,7 @@ public class BankAccountSerializer implements BankAccountDao {
 			return null;
 		}
 		try (ObjectInputStream ois = new ObjectInputStream(
-				new FileInputStream("src/main/resources/users/" + username + ".txt"))) {
+				new FileInputStream("src/main/resources/bankAccounts/" + username + ".txt"))) {
 
 			BankAccount ba = (BankAccount) ois.readObject();
 			return ba;
