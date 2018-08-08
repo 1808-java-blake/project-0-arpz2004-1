@@ -12,7 +12,7 @@ public class HomeScreen implements Screen {
 		do {
 			System.out.println("Please choose from following options:");
 			System.out.println("Enter 1 to deposit money.");
-			System.out.println("Enter 2 withdraw money.");
+			System.out.println("Enter 2 to withdraw money.");
 			System.out.println("Enter 3 to view account balance.");
 			System.out.println("Enter 4 to view transaction history.");
 			System.out.println("Enter 5 to logout.");
