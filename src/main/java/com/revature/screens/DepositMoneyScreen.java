@@ -25,6 +25,7 @@ public class DepositMoneyScreen implements Screen {
 		} while (!validSelection);
 		BankAccount ba = bad.findByUsername(User.getCurrentUser().getUsername());
 		ba.setBalance(ba.getBalance().add(new BigDecimal(Integer.parseInt(selection))));
+		bad.updateBankAccount(ba);
 		System.out.println("Your new bank account balance is $" + ba.getBalance() + ".");
 		System.out.println("Press enter to return to home screen.");
 		scan.nextLine();

@@ -20,7 +20,6 @@ public class BankAccountSerializer implements BankAccountDao {
 			return;
 		}
 		File f = new File("src/main/resources/bankAccounts/" + ba.getUsername() + ".txt");
-		System.out.println(f.getName());
 		if (f.exists()) {
 			return;
 		}
@@ -63,7 +62,21 @@ public class BankAccountSerializer implements BankAccountDao {
 
 	@Override
 	public void updateBankAccount(BankAccount ba) {
-		// TODO Auto-generated method stub
+		if (ba == null) {
+			return;
+		}
+		File f = new File("src/main/resources/bankAccounts/" + ba.getUsername() + ".txt");
+		if (!f.exists()) {
+			return;
+		}
+		try (ObjectOutputStream oos = new ObjectOutputStream(
+				new FileOutputStream("src/main/resources/bankAccounts/" + ba.getUsername() + ".txt"))) {
+
+			oos.writeObject(ba);
+
+		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
+		}
 
 	}
 
