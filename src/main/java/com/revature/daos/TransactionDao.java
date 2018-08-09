@@ -1,15 +1,13 @@
 package com.revature.daos;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
 import com.revature.beans.Transaction;
+import com.revature.beans.User;
 
 public interface TransactionDao {
 	public static final TransactionDao currentTransactionDao = new TransactionSerializer();
 	
 	void createTransaction(Transaction t);
-	Transaction findByDateAndAmount(LocalDateTime date, BigDecimal amount);
+	Transaction findByUserAndID(User u, int transactionID);
 	void updateTransaction(Transaction t);
 	void deleteTransaction(Transaction t);
 	

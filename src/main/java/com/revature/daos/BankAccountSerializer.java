@@ -19,6 +19,7 @@ public class BankAccountSerializer implements BankAccountDao {
 		if (ba == null) {
 			return;
 		}
+		new File("src/main/resources/bankAccounts/").mkdirs();
 		File f = new File("src/main/resources/bankAccounts/" + ba.getUsername() + ".txt");
 		if (f.exists()) {
 			return;

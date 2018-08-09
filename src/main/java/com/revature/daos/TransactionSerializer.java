@@ -7,10 +7,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 import com.revature.beans.Transaction;
+import com.revature.beans.User;
 
 public class TransactionSerializer implements TransactionDao {
 
@@ -19,48 +18,41 @@ public class TransactionSerializer implements TransactionDao {
 		if (t == null) {
 			return;
 		}
-		File f = new File("src/main/resources/transactions/" + t.getTime() + "_" + t.getAmount() + ".txt");
+		String currentUser = User.getCurrentUser().getUsername();
+		new File("src/main/resources/transactions/" + currentUser).mkdirs();
+		File f = new File("src/main/resources/transactions/" + currentUser + "/" + t.getTransactionID() + ".txt");
 		if (f.exists()) {
 			return;
 		}
 		try {
 			f.createNewFile();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 			return;
 		}
 		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(
-				"src/main/resources/transactions/" + t.getTime() + "_" + t.getAmount() + ".txt"))) {
+				"src/main/resources/transactions/" + currentUser + "/" + t.getTransactionID() + ".txt"))) {
 
 			oos.writeObject(t);
 
 		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 		} catch (IOException e) {
+			e.printStackTrace();
 		}
 
 	}
 
 	@Override
-	public Transaction findByDateAndAmount(LocalDateTime date, BigDecimal amount) {
-		// verify that what was passed in is not null
-		if (date == null || amount == null) {
-			return null;
-		}
-		try (ObjectInputStream ois = new ObjectInputStream(
-				new FileInputStream("src/main/resources/transactions/" + date + "_" + amount + ".txt"))) {
-
+	public Transaction findByUserAndID(User u, int transactionID) {
+		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(
+				"src/main/resources/transactions/" + u.getUsername() + "/" + transactionID + ".txt"))) {
 			Transaction t = (Transaction) ois.readObject();
 			return t;
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-//			e.printStackTrace();
+			System.out.println("ERROR: Transaction file not found.");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-//			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-//			e.printStackTrace();
 		}
 		return null;
 	}
@@ -70,12 +62,13 @@ public class TransactionSerializer implements TransactionDao {
 		if (t == null) {
 			return;
 		}
-		File f = new File("src/main/resources/transactions/" + t.getTime() + "_" + t.getAmount() + ".txt");
+		String currentUser = User.getCurrentUser().getUsername();
+		File f = new File("src/main/resources/transactions/" + currentUser + "/" + t.getTransactionID() + ".txt");
 		if (!f.exists()) {
 			return;
 		}
 		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(
-				"src/main/resources/transactions/" + t.getTime() + "_" + t.getAmount() + ".txt"))) {
+				"src/main/resources/transactions/" + currentUser + "/" + t.getTransactionID() + ".txt"))) {
 
 			oos.writeObject(t);
 
@@ -87,8 +80,6 @@ public class TransactionSerializer implements TransactionDao {
 
 	@Override
 	public void deleteTransaction(Transaction t) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

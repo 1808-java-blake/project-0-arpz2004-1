@@ -12,7 +12,8 @@ public class AccountBalanceScreen implements Screen {
 
 	@Override
 	public Screen start() {
-		BankAccount ba = bad.findByUsername(User.getCurrentUser().getUsername());
+		User currentUser = User.getCurrentUser();
+		BankAccount ba = bad.findByUsername(currentUser.getUsername());
 		System.out.println("Your current bank account balance is $" + ba.getBalance() + ".");
 		System.out.println("Press enter to return to home screen.");
 		scan.nextLine();

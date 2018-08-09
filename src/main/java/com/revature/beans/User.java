@@ -15,7 +15,7 @@ public class User implements Serializable {
 	private String lastName;
 	private int age;
 	private static User currentUser;
-	private List<Transaction> transactionHistory;
+	private List<Integer> transactionHistory;
 
 	public User(String username, String password, String firstName, String lastName, int age) {
 		super();
@@ -80,12 +80,12 @@ public class User implements Serializable {
 		this.age = age;
 	}
 
-	public List<Transaction> getTransactionHistory() {
+	public List<Integer> getTransactionHistory() {
 		return transactionHistory;
 	}
 
-	public void addTransaction(Transaction transaction) {
-		transactionHistory.add(transaction);
+	public void addTransaction(Integer transactionID) {
+		transactionHistory.add(transactionID);
 	}
 
 	@Override

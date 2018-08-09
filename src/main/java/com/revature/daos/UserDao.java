@@ -9,5 +9,4 @@ public interface UserDao {
 	User findByUsernameAndPassword(String username, String password);
 	void updateUser(User u);
 	void deleteUser(User u);
-	
 }

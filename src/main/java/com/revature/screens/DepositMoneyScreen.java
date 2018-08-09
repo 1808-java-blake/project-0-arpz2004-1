@@ -8,16 +8,21 @@ import com.revature.beans.BankAccount;
 import com.revature.beans.Transaction;
 import com.revature.beans.User;
 import com.revature.daos.BankAccountDao;
+import com.revature.daos.TransactionDao;
+import com.revature.daos.UserDao;
 
 public class DepositMoneyScreen implements Screen {
 	private Scanner scan = new Scanner(System.in);
 	private BankAccountDao bad = BankAccountDao.currentBankAccountDao;
+	private TransactionDao td = TransactionDao.currentTransactionDao;
+	private UserDao ud = UserDao.currentUserDao;
 
 	@Override
 	public Screen start() {
 		String selection;
 		boolean validSelection = false;
-		BankAccount ba = bad.findByUsername(User.getCurrentUser().getUsername());
+		User u = User.getCurrentUser();
+		BankAccount ba = bad.findByUsername(u.getUsername());
 		do {
 			System.out.println("Your current bank account balance is $" + ba.getBalance() + ".");
 			System.out.println("Enter the amount you want to deposit or press enter to return to home screen:");
@@ -27,11 +32,12 @@ public class DepositMoneyScreen implements Screen {
 				if (selection.charAt(0) == '$') {
 					selection = selection.substring(1);
 				}
-				//Change these to use daos
 				Transaction t = new Transaction(new BigDecimal(selection), LocalDateTime.now());
-				User.getCurrentUser().addTransaction(t);
+				td.createTransaction(t);
 				ba.setBalance(ba.getBalance().add(new BigDecimal(selection)));
 				bad.updateBankAccount(ba);
+				u.addTransaction(t.getTransactionID());
+				ud.updateUser(u);
 				System.out.println("Your new bank account balance is $" + ba.getBalance() + ".");
 				System.out.println("Press enter to return to home screen.");
 				scan.nextLine();
