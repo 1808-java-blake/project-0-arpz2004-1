@@ -1,6 +1,8 @@
 package com.revature.beans;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class User implements Serializable {
 	/**
@@ -13,11 +15,7 @@ public class User implements Serializable {
 	private String lastName;
 	private int age;
 	private static User currentUser;
-
-	public User() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+	private List<Transaction> transactionHistory;
 
 	public User(String username, String password, String firstName, String lastName, int age) {
 		super();
@@ -26,6 +24,12 @@ public class User implements Serializable {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.age = age;
+		transactionHistory = new ArrayList<>();
+	}
+
+	public User() {
+		super();
+		transactionHistory = new ArrayList<>();
 	}
 
 	public static void setCurrentUser(User currentUser) {
@@ -74,6 +78,14 @@ public class User implements Serializable {
 
 	public void setAge(int age) {
 		this.age = age;
+	}
+
+	public List<Transaction> getTransactionHistory() {
+		return transactionHistory;
+	}
+
+	public void addTransaction(Transaction transaction) {
+		transactionHistory.add(transaction);
 	}
 
 	@Override
