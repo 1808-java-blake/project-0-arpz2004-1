@@ -11,6 +11,8 @@ public class Transaction implements Serializable{
 	private static final long serialVersionUID = -1110170253158235115L;
 	private String username;
 	private int transactionID;
+	private BigDecimal amount;
+	private LocalDateTime time;
 	private static int lastTransactionID = 0;
 	
 	public Transaction(BigDecimal amount, LocalDateTime time) {
@@ -32,10 +34,20 @@ public class Transaction implements Serializable{
 	public void setTransactionID(int transactionID) {
 		this.transactionID = transactionID;
 	}
-	private BigDecimal amount;
-	private LocalDateTime time;
+	public static void setLastTransactionID(int transactionID) {
+		lastTransactionID = transactionID;
+	}
 	public BigDecimal getAmount() {
 		return amount;
+	}
+	public String getAmountString() {
+		String amountString = "$";
+		BigDecimal amount = this.amount;
+		if(amount.signum() == -1) {
+			amountString = "-" + amountString;
+			amount = amount.multiply(new BigDecimal(-1));
+		}
+		return amountString + amount.setScale(2);
 	}
 	public void setAmount(BigDecimal amount) {
 		this.amount = amount;

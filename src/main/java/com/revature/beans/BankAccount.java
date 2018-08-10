@@ -22,6 +22,10 @@ public class BankAccount implements Serializable {
 	public BigDecimal getBalance() {
 		return balance;
 	}
+	
+	public String getBalanceString() {
+		return "$" + this.balance.setScale(2);
+	}
 	public void setBalance(BigDecimal balance) {
 		this.balance = balance;
 	}

@@ -24,7 +24,7 @@ public class DepositMoneyScreen implements Screen {
 		User u = User.getCurrentUser();
 		BankAccount ba = bad.findByUsername(u.getUsername());
 		do {
-			System.out.println("Your current bank account balance is $" + ba.getBalance() + ".");
+			System.out.println("Your current bank account balance is " + ba.getBalanceString() + ".");
 			System.out.println("Enter the amount you want to deposit or press enter to return to home screen:");
 			selection = scan.nextLine();
 			if (selection.matches("^\\$?\\d+(.\\d\\d)?$")) {
@@ -38,7 +38,7 @@ public class DepositMoneyScreen implements Screen {
 				bad.updateBankAccount(ba);
 				u.addTransaction(t.getTransactionID());
 				ud.updateUser(u);
-				System.out.println("Your new bank account balance is $" + ba.getBalance() + ".");
+				System.out.println("Your new bank account balance is " + ba.getBalanceString() + ".");
 				System.out.println("Press enter to return to home screen.");
 				scan.nextLine();
 			} else if(selection.isEmpty()) {

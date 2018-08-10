@@ -33,13 +33,19 @@ public class User implements Serializable {
 	}
 
 	public static void setCurrentUser(User currentUser) {
+		if(currentUser != null) {
+			List<Integer> transactionHistory = currentUser.transactionHistory;
+			if (!transactionHistory.isEmpty()) {
+				Transaction.setLastTransactionID(transactionHistory.get(transactionHistory.size() - 1));
+			}
+		}
 		User.currentUser = currentUser;
 	}
-	
+
 	public static User getCurrentUser() {
 		return currentUser;
 	}
-	
+
 	public String getUsername() {
 		return username;
 	}
