@@ -7,6 +7,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.revature.beans.User;
 
@@ -40,6 +42,29 @@ public class UserSerializer implements UserDao {
 	}
 
 	@Override
+	public List<User> getAllUsers() {
+		File folder = new File("src/main/resources/users/");
+		File[] listOfFiles = folder.listFiles();
+		List<User> userList = new ArrayList<>();
+		for (int i = 0; i < listOfFiles.length; i++) {
+			if (listOfFiles[i].isFile()) {
+				try (ObjectInputStream ois = new ObjectInputStream(
+						new FileInputStream(listOfFiles[i]))) {
+					User u = (User) ois.readObject();
+					userList.add(u);
+				} catch (FileNotFoundException e) {
+					return null;
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return userList;
+	}
+
+	@Override
 	public User findByUsername(String username) {
 		// verify that what was passed in is not null
 		if (username == null) {
@@ -58,7 +83,7 @@ public class UserSerializer implements UserDao {
 		}
 		return null;
 	}
-	
+
 	@Override
 	public User findByUsernameAndPassword(String username, String password) {
 		// verify that what was passed in is not null
