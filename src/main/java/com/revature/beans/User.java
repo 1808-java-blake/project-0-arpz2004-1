@@ -13,6 +13,7 @@ public class User implements Serializable {
 	private String password;
 	private String firstName;
 	private String lastName;
+	private int adminLevel;
 	private int age;
 	private static User currentUser;
 	private List<Integer> transactionHistory;
@@ -24,11 +25,13 @@ public class User implements Serializable {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.age = age;
+		this.adminLevel = 0;
 		transactionHistory = new ArrayList<>();
 	}
 
 	public User() {
 		super();
+		this.adminLevel = 0;
 		transactionHistory = new ArrayList<>();
 	}
 
@@ -44,6 +47,18 @@ public class User implements Serializable {
 
 	public static User getCurrentUser() {
 		return currentUser;
+	}
+	
+	public boolean isAdmin() {
+		return adminLevel > 0;
+	}
+	
+	public int getAdminLevel() {
+		return adminLevel;
+	}
+
+	public void setAdminLevel(int adminLevel) {
+		this.adminLevel = adminLevel;
 	}
 
 	public String getUsername() {

@@ -22,8 +22,16 @@ public class RegisterUserScreen implements Screen {
 			if (username.isEmpty()) {
 				System.out.println("Username must be at least one character long.");
 			} else {
-				u.setUsername(username);
+				if(ud.findByUsername(username) == null) {
+					u.setUsername(username);
+				}else {
+					username = "";
+					System.out.println("Username already exists. Please choose a different one.");
+				}
 			}
+		}
+		if(username.equals("admin")) {
+			u.setAdminLevel(1);
 		}
 		String password = "";
 		while (password.length() < 6) {

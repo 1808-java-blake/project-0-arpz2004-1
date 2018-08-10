@@ -13,6 +13,10 @@ public class HomeScreen implements Screen {
 		boolean validSelection = false;
 		do {
 			System.out.println("Please choose from following options:");
+			boolean admin = User.getCurrentUser() != null && User.getCurrentUser().isAdmin();
+			if(admin) {
+				System.out.println("Enter 0 to view admin screen.");
+			}
 			System.out.println("Enter 1 to deposit money.");
 			System.out.println("Enter 2 to withdraw money.");
 			System.out.println("Enter 3 to view account balance.");
@@ -24,6 +28,9 @@ public class HomeScreen implements Screen {
 				if (Character.isDigit(c)) {
 					int valueOfCharacter = Character.getNumericValue(c);
 					validSelection = valueOfCharacter >= 1 && valueOfCharacter <= 5;
+					if(admin) {
+						validSelection |= valueOfCharacter == 0;
+					}
 				}
 			}
 			if(!validSelection) {
@@ -31,6 +38,8 @@ public class HomeScreen implements Screen {
 			}
 		} while (!validSelection);
 		switch (selection) {
+		case "0":
+			return new AdminScreen();
 		case "1":
 			return new DepositMoneyScreen();
 		case "2":

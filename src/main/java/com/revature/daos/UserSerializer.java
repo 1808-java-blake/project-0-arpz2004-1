@@ -40,6 +40,26 @@ public class UserSerializer implements UserDao {
 	}
 
 	@Override
+	public User findByUsername(String username) {
+		// verify that what was passed in is not null
+		if (username == null) {
+			return null;
+		}
+		try (ObjectInputStream ois = new ObjectInputStream(
+				new FileInputStream("src/main/resources/users/" + username + ".txt"))) {
+			User u = (User) ois.readObject(); // retrieve the user if it can
+			return u;
+		} catch (FileNotFoundException e) {
+			return null;
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@Override
 	public User findByUsernameAndPassword(String username, String password) {
 		// verify that what was passed in is not null
 		if (username == null || password == null) {

@@ -6,6 +6,7 @@ public interface UserDao {
 	public static final UserDao currentUserDao = new UserSerializer();
 	
 	void createUser(User u);
+	User findByUsername(String username);
 	User findByUsernameAndPassword(String username, String password);
 	void updateUser(User u);
 	void deleteUser(User u);
