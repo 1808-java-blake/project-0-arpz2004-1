@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import com.revature.helpers.BigDecimalHelper;
+
 public class Transaction implements Serializable{
 	/**
 	 * 
@@ -41,13 +43,7 @@ public class Transaction implements Serializable{
 		return amount;
 	}
 	public String getAmountString() {
-		String amountString = "$";
-		BigDecimal amount = this.amount;
-		if(amount.signum() == -1) {
-			amountString = "-" + amountString;
-			amount = amount.multiply(new BigDecimal(-1));
-		}
-		return amountString + amount.setScale(2);
+		return BigDecimalHelper.getMoneyString(amount);
 	}
 	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
