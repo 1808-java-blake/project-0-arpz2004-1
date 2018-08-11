@@ -47,7 +47,7 @@ public class HomeScreen implements Screen {
 		case "3":
 			return new AccountBalanceScreen();
 		case "4":
-			return new TransactionHistoryScreen();
+			return new TransactionHistoryScreen(User.getCurrentUser());
 		case "5":
 			User.setCurrentUser(null);
 			return new LoginScreen();

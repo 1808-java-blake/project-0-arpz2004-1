@@ -34,8 +34,11 @@ public class ShowUserScreen implements Screen {
 		System.out.println(StringHelper.padRight(username, usernameLength)
 				+ StringHelper.padRight(firstName, firstNameLength) + StringHelper.padRight(lastName, lastNameLength)
 				+ StringHelper.padRight(String.valueOf(age), ageLength) + (adminLevel == 1 ? "Yes" : "No"));
-		System.out.println("Press enter to return to admin screen.");
-		scan.nextLine();
+		System.out.println("Enter 1 to view user's transaction history or anything else to return to admin screen.");
+		String selection = scan.nextLine();
+		if("1".equals(selection)) {
+			return new TransactionHistoryScreen(user, new AdminScreen());
+		}
 		return new AdminScreen();
 	}
 

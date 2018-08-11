@@ -15,14 +15,25 @@ import com.revature.helpers.StringHelper;
 public class TransactionHistoryScreen implements Screen {
 	private Scanner scan = new Scanner(System.in);
 	private TransactionDao td = TransactionDao.currentTransactionDao;
+	private User user;
+	private Screen previousScreen;
+
+	public TransactionHistoryScreen(User user) {
+		this.user = user;
+		previousScreen = new HomeScreen();
+	}
+
+	public TransactionHistoryScreen(User user, Screen screen) {
+		this.user = user;
+		previousScreen = screen;
+	}
 
 	@Override
 	public Screen start() {
-		User u = User.getCurrentUser();
-		List<Integer> transactionHistory = u.getTransactionHistory();
+		List<Integer> transactionHistory = user.getTransactionHistory();
 		List<String> transactionAmounts = new ArrayList<>();
 		for (Integer transactionID : transactionHistory) {
-			Transaction transaction = td.findByUserAndID(u, transactionID);
+			Transaction transaction = td.findByUserAndID(user, transactionID);
 			transactionAmounts.add(BigDecimalHelper.getMoneyString(transaction.getAmount()));
 		}
 		int lastTransactionID = 0;
@@ -41,7 +52,7 @@ public class TransactionHistoryScreen implements Screen {
 				+ StringHelper.padRight("Amount", amountLength) + "Balance");
 		BigDecimal balance = new BigDecimal(0);
 		for (Integer transactionID : transactionHistory) {
-			Transaction transaction = td.findByUserAndID(u, transactionID);
+			Transaction transaction = td.findByUserAndID(user, transactionID);
 			balance = balance.add(transaction.getAmount());
 			String transactionTime = transaction.getTime().format(formatter);
 			System.out.println(StringHelper.padRight(String.valueOf(transaction.getTransactionID()), maxIDLength + 3)
@@ -49,8 +60,12 @@ public class TransactionHistoryScreen implements Screen {
 					+ StringHelper.padRight(transaction.getAmountString(), amountLength)
 					+ BigDecimalHelper.getMoneyString(balance));
 		}
-		System.out.println("Press enter to return to home screen.");
+		if (previousScreen instanceof AdminScreen) {
+			System.out.println("Press enter to return to admin screen.");
+		} else {
+			System.out.println("Press enter to return to home screen.");
+		}
 		scan.nextLine();
-		return new HomeScreen();
+		return previousScreen;
 	}
 }
