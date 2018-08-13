@@ -3,6 +3,7 @@ package com.revature.screens;
 import java.util.Scanner;
 
 import com.revature.beans.BankAccount;
+import com.revature.beans.BankAccount.AccountType;
 import com.revature.beans.User;
 import com.revature.daos.BankAccountDao;
 import com.revature.daos.UserDao;
@@ -108,8 +109,40 @@ public class RegisterUserScreen implements Screen {
 				System.out.println("Invalid age. You must enter a number between 0 and 150.");
 			}
 		}
-		ud.createUser(u);
 		BankAccount ba = new BankAccount();
+		String accountType = "";
+		while (accountType.isEmpty()) {
+			boolean validSelection = false;
+			do {
+				System.out.println("Please choose the type of account to create:");
+				System.out.println("Enter 1 to create a savings account.");
+				System.out.println("Enter 2 to create a checking account.");
+				System.out.println("Enter 3 to quit return to home screen.");
+				accountType = scan.nextLine();
+				if (accountType.length() == 1) {
+					char c = accountType.charAt(0);
+					if (Character.isDigit(c)) {
+						int valueOfCharacter = Character.getNumericValue(c);
+						validSelection = valueOfCharacter >= 1 && valueOfCharacter <= 3;
+					}
+				}
+				if (!validSelection) {
+					accountType = "";
+					System.out.println("Invalid option selected.");
+				}
+			} while (!validSelection);
+			switch (accountType) {
+			case "1":
+				ba.setAccountType(AccountType.SAVINGS);
+				break;
+			case "2":
+				ba.setAccountType(AccountType.CHECKING);
+				break;
+			case "3":
+				return new LoginScreen();
+			}
+		}
+		ud.createUser(u);
 		ba.setUsername(username);
 		ba.setBalance(0);
 		bad.createBankAccount(ba);

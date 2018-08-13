@@ -4,43 +4,81 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 public class BankAccount implements Serializable {
+
+	public enum AccountType {
+		SAVINGS("Savings"), CHECKING("Checking");
+
+		private final String value;
+
+		private AccountType(String value) {
+			this.value = value;
+		}
+
+		public String getValue() {
+			return value;
+		}
+	}
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 3914513090847475291L;
+
 	private BigDecimal balance;
 	private String username;
+	private AccountType accountType;
+
 	public BankAccount() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
-	public BankAccount(BigDecimal balance, String username) {
+
+	public BankAccount(BigDecimal balance, String username, AccountType accountType) {
 		super();
 		this.balance = balance;
 		this.username = username;
+		this.accountType = accountType;
 	}
+
+	public AccountType getAccountType() {
+		return accountType;
+	}
+	
+	public String getAccountTypeString() {
+		return accountType.getValue();
+	}
+
+	public void setAccountType(AccountType accountType) {
+		this.accountType = accountType;
+	}
+
 	public BigDecimal getBalance() {
 		return balance;
 	}
-	
+
 	public String getBalanceString() {
 		return "$" + this.balance.setScale(2);
 	}
+
 	public void setBalance(BigDecimal balance) {
 		this.balance = balance;
 	}
+
 	public void setBalance(int balance) {
 		this.balance = new BigDecimal(balance);
 	}
+
 	public String getUsername() {
 		return username;
 	}
+
 	public void setUsername(String username) {
 		this.username = username;
 	}
+
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -49,6 +87,7 @@ public class BankAccount implements Serializable {
 		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -70,9 +109,10 @@ public class BankAccount implements Serializable {
 			return false;
 		return true;
 	}
+
 	@Override
 	public String toString() {
 		return "BankAccount [balance=" + balance + ", username=" + username + "]";
 	}
-	
+
 }

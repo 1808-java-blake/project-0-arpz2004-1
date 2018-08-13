@@ -7,20 +7,21 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.revature.beans.BankAccount;
 
 public class BankAccountSerializer implements BankAccountDao {
-
-	
 
 	@Override
 	public void createBankAccount(BankAccount ba) {
 		if (ba == null) {
 			return;
 		}
-		new File("src/main/resources/bankAccounts/").mkdirs();
-		File f = new File("src/main/resources/bankAccounts/" + ba.getUsername() + ".txt");
+		new File("src/main/resources/bankAccounts/" + ba.getUsername()).mkdirs();
+		File f = new File(
+				"src/main/resources/bankAccounts/" + ba.getUsername() + "/" + ba.getAccountTypeString() + ".txt");
 		if (f.exists()) {
 			return;
 		}
@@ -31,8 +32,8 @@ public class BankAccountSerializer implements BankAccountDao {
 			e1.printStackTrace();
 			return;
 		}
-		try (ObjectOutputStream oos = new ObjectOutputStream(
-				new FileOutputStream("src/main/resources/bankAccounts/" + ba.getUsername() + ".txt"))) {
+		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(
+				"src/main/resources/bankAccounts/" + ba.getUsername() + "/" + ba.getAccountTypeString() + ".txt"))) {
 
 			oos.writeObject(ba);
 
@@ -43,22 +44,25 @@ public class BankAccountSerializer implements BankAccountDao {
 	}
 
 	@Override
-	public BankAccount findByUsername(String username) {
-		// verify that what was passed in is not null
-		if (username == null) {
-			return null;
+	public List<BankAccount> findByUsername(String username) {
+		File folder = new File("src/main/resources/bankAccounts/" + username + "/");
+		File[] listOfFiles = folder.listFiles();
+		List<BankAccount> bankAccountList = new ArrayList<>();
+		for (int i = 0; i < listOfFiles.length; i++) {
+			if (listOfFiles[i].isFile()) {
+				try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(listOfFiles[i]))) {
+					BankAccount ba = (BankAccount) ois.readObject();
+					bankAccountList.add(ba);
+				} catch (FileNotFoundException e) {
+					return null;
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+			}
 		}
-		try (ObjectInputStream ois = new ObjectInputStream(
-				new FileInputStream("src/main/resources/bankAccounts/" + username + ".txt"))) {
-
-			BankAccount ba = (BankAccount) ois.readObject();
-			return ba;
-
-		} catch (FileNotFoundException e) {
-		} catch (IOException e) {
-		} catch (ClassNotFoundException e) {
-		}
-		return null;
+		return bankAccountList;
 	}
 
 	@Override
@@ -66,12 +70,13 @@ public class BankAccountSerializer implements BankAccountDao {
 		if (ba == null) {
 			return;
 		}
-		File f = new File("src/main/resources/bankAccounts/" + ba.getUsername() + ".txt");
+		File f = new File(
+				"src/main/resources/bankAccounts/" + ba.getUsername() + "/" + ba.getAccountTypeString() + ".txt");
 		if (!f.exists()) {
 			return;
 		}
-		try (ObjectOutputStream oos = new ObjectOutputStream(
-				new FileOutputStream("src/main/resources/bankAccounts/" + ba.getUsername() + ".txt"))) {
+		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(
+				"src/main/resources/bankAccounts/" + ba.getUsername() + "/" + ba.getAccountTypeString() + ".txt"))) {
 
 			oos.writeObject(ba);
 
