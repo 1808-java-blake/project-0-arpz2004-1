@@ -30,11 +30,11 @@ public class BankAccount implements Serializable {
 
 	public BankAccount() {
 		super();
+		this.balance = new BigDecimal(0);
 	}
 
-	public BankAccount(BigDecimal balance, String username, AccountType accountType) {
-		super();
-		this.balance = balance;
+	public BankAccount(String username, AccountType accountType) {
+		this();
 		this.username = username;
 		this.accountType = accountType;
 	}

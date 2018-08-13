@@ -109,7 +109,7 @@ public class RegisterUserScreen implements Screen {
 				System.out.println("Invalid age. You must enter a number between 0 and 150.");
 			}
 		}
-		BankAccount ba = new BankAccount();
+		BankAccount ba = null;
 		String accountType = "";
 		while (accountType.isEmpty()) {
 			boolean validSelection = false;
@@ -133,18 +133,16 @@ public class RegisterUserScreen implements Screen {
 			} while (!validSelection);
 			switch (accountType) {
 			case "1":
-				ba.setAccountType(AccountType.SAVINGS);
+				ba = new BankAccount(username, AccountType.SAVINGS);
 				break;
 			case "2":
-				ba.setAccountType(AccountType.CHECKING);
+				ba = new BankAccount(username, AccountType.CHECKING);
 				break;
 			case "3":
 				return new LoginScreen();
 			}
 		}
 		ud.createUser(u);
-		ba.setUsername(username);
-		ba.setBalance(0);
 		bad.createBankAccount(ba);
 		System.out.println("Registration finished. Press enter to return to login screen.");
 		scan.nextLine();
