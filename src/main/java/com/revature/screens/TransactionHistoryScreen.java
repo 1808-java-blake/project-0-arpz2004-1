@@ -3,10 +3,13 @@ package com.revature.screens;
 import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeSet;
 
+import com.revature.beans.BankAccount.AccountType;
 import com.revature.beans.Transaction;
 import com.revature.beans.User;
 import com.revature.daos.TransactionDao;
@@ -58,18 +61,21 @@ public class TransactionHistoryScreen implements Screen {
 		int maxTransferToLength = StringHelper.maxLengthString(transferredToUsers);
 		int transferToLength = Math.max(22, maxTransferToLength + 3);
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		System.out.println(StringHelper.padRight("#", maxIDLength + 3)
-				+ StringHelper.padRight("Account Type", accountTypeLength)
-				+ StringHelper.padRight("Transaction Type", transactionTypeLength)
-				+ StringHelper.padRight("Transferred To/From", transferToLength) + StringHelper.padRight("Time", dateLength)
-				+ StringHelper.padRight("Amount", amountLength) + "Balance");
-		BigDecimal balance = new BigDecimal(0);
+		System.out.println(
+				StringHelper.padRight("#", maxIDLength + 3) + StringHelper.padRight("Account Type", accountTypeLength)
+						+ StringHelper.padRight("Transaction Type", transactionTypeLength)
+						+ StringHelper.padRight("Transferred To/From", transferToLength)
+						+ StringHelper.padRight("Time", dateLength) + StringHelper.padRight("Amount", amountLength)
+						+ "Balance");
+		Map<AccountType, BigDecimal> accountTypeBalance = new HashMap<>();
 		for (Integer transactionID : transactionHistory) {
 			Transaction transaction = td.findByUserAndID(user, transactionID);
-			balance = balance.add(transaction.getAmount());
+			AccountType accountType = transaction.getBankAccount().getAccountType();
+			BigDecimal newAccountTypeBalance = transaction.getAmount().add(accountTypeBalance.getOrDefault(accountType, new BigDecimal(0)));
+			accountTypeBalance.put(accountType, newAccountTypeBalance);
 			String transactionTime = transaction.getTime().format(formatter);
 			String bankAccountTransferredTo = transaction.getUsernameAndAccountTypeTransferredTo();
-			if(bankAccountTransferredTo == null) {
+			if (bankAccountTransferredTo == null) {
 				bankAccountTransferredTo = "";
 			}
 			System.out.println(StringHelper.padRight(String.valueOf(transaction.getTransactionID()), maxIDLength + 3)
@@ -78,7 +84,7 @@ public class TransactionHistoryScreen implements Screen {
 					+ StringHelper.padRight(bankAccountTransferredTo, transferToLength)
 					+ StringHelper.padRight(transactionTime, dateLength)
 					+ StringHelper.padRight(transaction.getAmountString(), amountLength)
-					+ BigDecimalHelper.getMoneyString(balance));
+					+ BigDecimalHelper.getMoneyString(newAccountTypeBalance));
 		}
 		if (previousScreen instanceof AdminScreen) {
 			System.out.println("Press enter to return to admin screen.");
