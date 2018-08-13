@@ -21,7 +21,7 @@ public class SearchForUserScreen implements Screen {
 			} else {
 				User u = ud.findByUsername(selection);
 				if (u == null) {
-					System.out.println("User with that username does not exist.");
+					System.out.println("ERROR: User with that username does not exist.");
 				} else {
 					return new ShowUserScreen(u);
 				}

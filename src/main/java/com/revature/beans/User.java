@@ -1,8 +1,7 @@
 package com.revature.beans;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.TreeSet;
 
 public class User implements Serializable {
 	/**
@@ -16,7 +15,7 @@ public class User implements Serializable {
 	private int adminLevel;
 	private int age;
 	private static User currentUser;
-	private List<Integer> transactionHistory;
+	private TreeSet<Integer> transactionHistory;
 
 	public User(String username, String password, String firstName, String lastName, int age) {
 		super();
@@ -26,33 +25,27 @@ public class User implements Serializable {
 		this.lastName = lastName;
 		this.age = age;
 		this.adminLevel = 0;
-		transactionHistory = new ArrayList<>();
+		transactionHistory = new TreeSet<>();
 	}
 
 	public User() {
 		super();
 		this.adminLevel = 0;
-		transactionHistory = new ArrayList<>();
+		transactionHistory = new TreeSet<>();
 	}
 
 	public static void setCurrentUser(User currentUser) {
-		if(currentUser != null) {
-			List<Integer> transactionHistory = currentUser.transactionHistory;
-			if (!transactionHistory.isEmpty()) {
-				Transaction.setLastTransactionID(transactionHistory.get(transactionHistory.size() - 1));
-			}
-		}
 		User.currentUser = currentUser;
 	}
 
 	public static User getCurrentUser() {
 		return currentUser;
 	}
-	
+
 	public boolean isAdmin() {
 		return adminLevel > 0;
 	}
-	
+
 	public int getAdminLevel() {
 		return adminLevel;
 	}
@@ -101,12 +94,21 @@ public class User implements Serializable {
 		this.age = age;
 	}
 
-	public List<Integer> getTransactionHistory() {
+	public TreeSet<Integer> getTransactionHistory() {
 		return transactionHistory;
 	}
 
-	public void addTransaction(Integer transactionID) {
-		transactionHistory.add(transactionID);
+	public int getNewTransactionID() {
+		boolean duplicate = true;
+		int newID = 1;
+		while (duplicate) {
+			if (!transactionHistory.isEmpty()) {
+				int lastID = transactionHistory.last();
+				newID = lastID + 1;
+			}
+			duplicate = !transactionHistory.add(newID);
+		}
+		return newID;
 	}
 
 	@Override

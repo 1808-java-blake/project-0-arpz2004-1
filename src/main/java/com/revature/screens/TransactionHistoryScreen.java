@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.TreeSet;
 
 import com.revature.beans.Transaction;
 import com.revature.beans.User;
@@ -30,7 +31,7 @@ public class TransactionHistoryScreen implements Screen {
 
 	@Override
 	public Screen start() {
-		List<Integer> transactionHistory = user.getTransactionHistory();
+		TreeSet<Integer> transactionHistory = user.getTransactionHistory();
 		List<String> transactionAmounts = new ArrayList<>();
 		for (Integer transactionID : transactionHistory) {
 			Transaction transaction = td.findByUserAndID(user, transactionID);
@@ -38,7 +39,7 @@ public class TransactionHistoryScreen implements Screen {
 		}
 		int lastTransactionID = 0;
 		if (!transactionHistory.isEmpty()) {
-			lastTransactionID = transactionHistory.get(transactionHistory.size() - 1);
+			lastTransactionID = transactionHistory.last();
 		}
 		int maxIDLength = String.valueOf(lastTransactionID).length();
 		int maxAmountLength = StringHelper.maxLengthString(transactionAmounts);

@@ -21,13 +21,14 @@ public class HomeScreen implements Screen {
 			System.out.println("Enter 2 to withdraw money.");
 			System.out.println("Enter 3 to view account balance.");
 			System.out.println("Enter 4 to view transaction history.");
-			System.out.println("Enter 5 to logout.");
+			System.out.println("Enter 5 to start a wire transfer.");
+			System.out.println("Enter 6 to logout.");
 			selection = scan.nextLine();
 			if (selection.length() == 1) {
 				char c = selection.charAt(0);
 				if (Character.isDigit(c)) {
 					int valueOfCharacter = Character.getNumericValue(c);
-					validSelection = valueOfCharacter >= 1 && valueOfCharacter <= 5;
+					validSelection = valueOfCharacter >= 1 && valueOfCharacter <= 6;
 					if(admin) {
 						validSelection |= valueOfCharacter == 0;
 					}
@@ -49,6 +50,8 @@ public class HomeScreen implements Screen {
 		case "4":
 			return new TransactionHistoryScreen(User.getCurrentUser());
 		case "5":
+			return new WireTransferScreen();
+		case "6":
 			User.setCurrentUser(null);
 			return new LoginScreen();
 		}

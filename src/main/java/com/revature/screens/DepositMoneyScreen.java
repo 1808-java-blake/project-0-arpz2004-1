@@ -32,11 +32,11 @@ public class DepositMoneyScreen implements Screen {
 				if (selection.charAt(0) == '$') {
 					selection = selection.substring(1);
 				}
-				Transaction t = new Transaction(new BigDecimal(selection), LocalDateTime.now());
+				BigDecimal depositAmount = new BigDecimal(selection);
+				Transaction t = new Transaction(u, depositAmount, LocalDateTime.now());
 				td.createTransaction(t);
-				ba.setBalance(ba.getBalance().add(new BigDecimal(selection)));
+				ba.setBalance(ba.getBalance().add(depositAmount));
 				bad.updateBankAccount(ba);
-				u.addTransaction(t.getTransactionID());
 				ud.updateUser(u);
 				System.out.println("Your new bank account balance is " + ba.getBalanceString() + ".");
 				System.out.println("Press enter to return to home screen.");

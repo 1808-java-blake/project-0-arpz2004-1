@@ -11,33 +11,26 @@ public class Transaction implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = -1110170253158235115L;
-	private String username;
+	private User user;
 	private int transactionID;
 	private BigDecimal amount;
 	private LocalDateTime time;
-	private static int lastTransactionID = 0;
 	
-	public Transaction(BigDecimal amount, LocalDateTime time) {
+	public Transaction(User user, BigDecimal amount, LocalDateTime time) {
 		super();
 		this.amount = amount;
 		this.time = time;
-		transactionID = lastTransactionID + 1;
-		lastTransactionID++;
+		this.user = user;
+		transactionID = user.getNewTransactionID();
 	}
-	public String getUsername() {
-		return username;
+	public User getUser() {
+		return user;
 	}
-	public void setUsername(String username) {
-		this.username = username;
+	public void setUser(User user) {
+		this.user = user;
 	}
 	public int getTransactionID() {
 		return transactionID;
-	}
-	public void setTransactionID(int transactionID) {
-		this.transactionID = transactionID;
-	}
-	public static void setLastTransactionID(int transactionID) {
-		lastTransactionID = transactionID;
 	}
 	public BigDecimal getAmount() {
 		return amount;
@@ -56,7 +49,7 @@ public class Transaction implements Serializable{
 	}
 	@Override
 	public String toString() {
-		return "Transaction [username=" + username + ", transactionID=" + transactionID + ", amount=" + amount
+		return "Transaction [user=" + user.toString() + ", transactionID=" + transactionID + ", amount=" + amount
 				+ ", time=" + time + "]";
 	}
 

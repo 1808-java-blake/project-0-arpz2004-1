@@ -32,13 +32,13 @@ public class WithdrawMoneyScreen implements Screen {
 				if (selection.charAt(0) == '$') {
 					selection = selection.substring(1);
 				}
-				if (currentBalance.compareTo(new BigDecimal(selection)) >= 0) {
+				BigDecimal withdrawAmount = new BigDecimal(selection);
+				if (currentBalance.compareTo(withdrawAmount) >= 0) {
 					validSelection = true;
-					Transaction t = new Transaction(new BigDecimal("-" + selection), LocalDateTime.now());
+					Transaction t = new Transaction(u, withdrawAmount.negate(), LocalDateTime.now());
 					td.createTransaction(t);
-					ba.setBalance(currentBalance.subtract(new BigDecimal((selection))));
+					ba.setBalance(currentBalance.subtract(withdrawAmount));
 					bad.updateBankAccount(ba);
-					u.addTransaction(t.getTransactionID());
 					ud.updateUser(u);
 					System.out.println("Your new bank account balance is " + ba.getBalanceString() + ".");
 					System.out.println("Press enter to return to home screen.");
