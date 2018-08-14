@@ -2,6 +2,7 @@ package com.revature.beans;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.TreeSet;
 
 public class BankAccount implements Serializable {
 
@@ -27,22 +28,25 @@ public class BankAccount implements Serializable {
 	private BigDecimal balance;
 	private String username;
 	private AccountType accountType;
+	private TreeSet<Integer> transactionHistory;
 
 	public BankAccount() {
 		super();
 		this.balance = new BigDecimal(0);
+		transactionHistory = new TreeSet<>();
 	}
 
 	public BankAccount(String username, AccountType accountType) {
 		this();
 		this.username = username;
 		this.accountType = accountType;
+		transactionHistory = new TreeSet<>();
 	}
 
 	public AccountType getAccountType() {
 		return accountType;
 	}
-	
+
 	public String getAccountTypeString() {
 		return accountType.getValue();
 	}
@@ -65,6 +69,19 @@ public class BankAccount implements Serializable {
 
 	public void setBalance(int balance) {
 		this.balance = new BigDecimal(balance);
+	}
+
+	public int getNewTransactionID() {
+		boolean duplicate = true;
+		int newID = 1;
+		while (duplicate) {
+			if (!transactionHistory.isEmpty()) {
+				int lastID = transactionHistory.last();
+				newID = lastID + 1;
+			}
+			duplicate = !transactionHistory.add(newID);
+		}
+		return newID;
 	}
 
 	public String getUsername() {

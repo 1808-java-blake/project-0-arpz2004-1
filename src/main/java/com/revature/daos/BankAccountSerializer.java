@@ -1,6 +1,7 @@
 package com.revature.daos;
 
 import java.io.File;
+import com.revature.beans.BankAccount.AccountType;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -9,6 +10,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import com.revature.beans.BankAccount;
 
@@ -60,6 +63,25 @@ public class BankAccountSerializer implements BankAccountDao {
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
 				}
+			}
+		}
+		return bankAccountList;
+	}
+
+	@Override
+	public List<BankAccount> findByUsernameAndType(Set<Entry<String, AccountType>> usernamesAndAccountTypes) {
+		List<BankAccount> bankAccountList = new ArrayList<>();
+		for (Entry<String, AccountType> usernameAccountType : usernamesAndAccountTypes) {
+			try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("src/main/resources/bankAccounts/"
+					+ usernameAccountType.getKey() + "/" + usernameAccountType.getValue().getValue() + ".txt"))) {
+				BankAccount ba = (BankAccount) ois.readObject();
+				bankAccountList.add(ba);
+			} catch (FileNotFoundException e) {
+				return null;
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
 			}
 		}
 		return bankAccountList;

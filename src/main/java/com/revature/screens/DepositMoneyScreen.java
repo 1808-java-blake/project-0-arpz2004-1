@@ -35,13 +35,13 @@ public class DepositMoneyScreen implements Screen {
 				System.out.println("Your current bank account balance is " + ba.getBalanceString() + ".");
 				System.out.println("Enter the amount you want to deposit or press enter to return to home screen:");
 				selection = scan.nextLine();
-				if (selection.matches("^\\$?\\d+(.\\d\\d)?$")) {
+				if (selection.matches("^\\$?\\d+(\\.\\d\\d)?$")) {
 					validSelection = true;
 					if (selection.charAt(0) == '$') {
 						selection = selection.substring(1);
 					}
 					BigDecimal depositAmount = new BigDecimal(selection);
-					Transaction t = new Transaction(u, depositAmount, LocalDateTime.now(), ba, TransactionType.DEPOSIT);
+					Transaction t = new Transaction(depositAmount, LocalDateTime.now(), ba, TransactionType.DEPOSIT);
 					td.createTransaction(t);
 					ba.setBalance(ba.getBalance().add(depositAmount));
 					bad.updateBankAccount(ba);

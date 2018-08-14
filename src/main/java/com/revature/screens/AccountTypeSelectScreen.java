@@ -29,15 +29,23 @@ public class AccountTypeSelectScreen implements Screen {
 	public BankAccount getBankAccount() {
 		Map<Integer, BankAccount> findBankAccount = new HashMap<>();
 		List<BankAccount> bankAccountList = bd.findByUsername(user.getUsername());
+		List<BankAccount> sharedBankAccountList = bd.findByUsernameAndType(user.getSharedAccounts());
+		bankAccountList.addAll(sharedBankAccountList);
 		int bankAccountCount = bankAccountList.size();
 		int maxCountLength = String.valueOf(bankAccountCount).length() + 3;
-		System.out.println(StringHelper.padRight("#", maxCountLength) + "Account Type");
+		int accountTypeLength = 15;
+		System.out.println(StringHelper.padRight("#", maxCountLength)
+				+ StringHelper.padRight("Account Type", accountTypeLength) + "Shared By");
 		int bankAccountNumber = 0;
 		for (BankAccount bankAccount : bankAccountList) {
+			String username = bankAccount.getUsername();
+			if (username.equals(user.getUsername())) {
+				username = "";
+			}
 			bankAccountNumber++;
 			findBankAccount.put(bankAccountNumber, bankAccount);
 			System.out.println(StringHelper.padRight(String.valueOf(bankAccountNumber), maxCountLength)
-					+ bankAccount.getAccountTypeString());
+					+ StringHelper.padRight(bankAccount.getAccountTypeString(), accountTypeLength) + username);
 		}
 		String selection;
 		boolean validSelection = false;

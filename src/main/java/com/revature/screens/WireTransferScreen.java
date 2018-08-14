@@ -60,7 +60,7 @@ public class WireTransferScreen implements Screen {
 					System.out
 							.println("Enter the amount you want to transfer or press enter to return to home screen:");
 					amount = scan.nextLine();
-					if (amount.matches("^\\$?\\d+(.\\d\\d)?$")) {
+					if (amount.matches("^\\$?\\d+(\\.\\d\\d)?$")) {
 						if (amount.charAt(0) == '$') {
 							amount = amount.substring(1);
 						}
@@ -69,9 +69,9 @@ public class WireTransferScreen implements Screen {
 						if (currentBalance.compareTo(transferAmount) >= 0) {
 							validAmount = true;
 							LocalDateTime transactionTime = LocalDateTime.now();
-							Transaction t = new Transaction(currentUser, transferAmount.negate(), transactionTime, ba,
+							Transaction t = new Transaction(transferAmount.negate(), transactionTime, ba,
 									TransactionType.WIRE_TRANSFER, ba2);
-							Transaction t2 = new Transaction(userTransferredTo, transferAmount, transactionTime, ba2,
+							Transaction t2 = new Transaction(transferAmount, transactionTime, ba2,
 									TransactionType.WIRE_TRANSFER, ba);
 							td.createTransaction(t);
 							td.createTransaction(t2);

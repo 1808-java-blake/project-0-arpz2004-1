@@ -14,11 +14,28 @@ public class AccountBalanceScreen implements Screen {
 
 	@Override
 	public Screen start() {
-		List<BankAccount> bankAccountList = bad.findByUsername(User.getCurrentUser().getUsername());
+		User currentUser = User.getCurrentUser();
+		List<BankAccount> bankAccountList = bad.findByUsername(currentUser.getUsername());
+		List<BankAccount> sharedBankAccountList = bad.findByUsernameAndType(currentUser.getSharedAccounts());
+		int maxUsernameLength = 0;
+		for (BankAccount sharedBankAccount : sharedBankAccountList) {
+			int usernameLength = sharedBankAccount.getUsername().length();
+			if (usernameLength > maxUsernameLength) {
+				maxUsernameLength = usernameLength;
+			}
+		}
+		int usernameLength = Math.max(12, maxUsernameLength + 3);
+		bankAccountList.addAll(sharedBankAccountList);
 		int accountTypeLength = 15;
-		System.out.println(StringHelper.padRight("Account Type", accountTypeLength) + "Balance");
+		System.out.println(StringHelper.padRight("Account Type", accountTypeLength)
+				+ StringHelper.padRight("Shared By", usernameLength) + "Balance");
 		for (BankAccount bankAccount : bankAccountList) {
-			System.out.println(StringHelper.padRight(bankAccount.getAccountTypeString(), accountTypeLength) + bankAccount.getBalanceString());
+			String username = bankAccount.getUsername();
+			if (username.equals(currentUser.getUsername())) {
+				username = "";
+			}
+			System.out.println(StringHelper.padRight(bankAccount.getAccountTypeString(), accountTypeLength)
+					+ StringHelper.padRight(username, usernameLength) + bankAccount.getBalanceString());
 		}
 		System.out.println("Press enter to return to home screen.");
 		scan.nextLine();

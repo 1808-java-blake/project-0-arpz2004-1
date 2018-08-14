@@ -36,14 +36,14 @@ public class WithdrawMoneyScreen implements Screen {
 				System.out.println("Your current bank account balance is " + ba.getBalanceString() + ".");
 				System.out.println("Enter the amount you want to withdraw or press enter to return to home screen:");
 				selection = scan.nextLine();
-				if (selection.matches("^\\$?\\d+(.\\d\\d)?$")) {
+				if (selection.matches("^\\$?\\d+(\\.\\d\\d)?$")) {
 					if (selection.charAt(0) == '$') {
 						selection = selection.substring(1);
 					}
 					BigDecimal withdrawAmount = new BigDecimal(selection);
 					if (currentBalance.compareTo(withdrawAmount) >= 0) {
 						validSelection = true;
-						Transaction t = new Transaction(u, withdrawAmount.negate(), LocalDateTime.now(), ba,
+						Transaction t = new Transaction(withdrawAmount.negate(), LocalDateTime.now(), ba,
 								TransactionType.WITHDRAWAL);
 						td.createTransaction(t);
 						ba.setBalance(currentBalance.subtract(withdrawAmount));

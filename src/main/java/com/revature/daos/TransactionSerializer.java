@@ -7,22 +7,23 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.revature.beans.BankAccount.AccountType;
 import com.revature.beans.Transaction;
-import com.revature.beans.User;
 
 public class TransactionSerializer implements TransactionDao {
-	private UserDao ud = UserDao.currentUserDao;
-
 	@Override
 	public void createTransaction(Transaction t) {
 		if (t == null) {
 			return;
 		}
-		User user = t.getUser();
-		String username = user.getUsername();
-		new File("src/main/resources/transactions/" + username).mkdirs();
-		File f = new File("src/main/resources/transactions/" + username + "/" + t.getTransactionID() + ".txt");
+		String username = t.getBankAccount().getUsername();
+		String accountType = t.getBankAccount().getAccountTypeString();
+		new File("src/main/resources/transactions/" + username + "/" + accountType).mkdirs();
+		File f = new File("src/main/resources/transactions/" + username + "/" + accountType + "/" + t.getTransactionID()
+				+ ".txt");
 		if (f.exists()) {
 			return;
 		}
@@ -32,8 +33,8 @@ public class TransactionSerializer implements TransactionDao {
 			e.printStackTrace();
 			return;
 		}
-		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(
-				"src/main/resources/transactions/" + username + "/" + t.getTransactionID() + ".txt"))) {
+		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("src/main/resources/transactions/"
+				+ username + "/" + accountType + "/" + t.getTransactionID() + ".txt"))) {
 
 			oos.writeObject(t);
 
@@ -42,22 +43,28 @@ public class TransactionSerializer implements TransactionDao {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		ud.updateUser(user);
-
 	}
 
 	@Override
-	public Transaction findByUserAndID(User u, int transactionID) {
-		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(
-				"src/main/resources/transactions/" + u.getUsername() + "/" + transactionID + ".txt"))) {
-			Transaction t = (Transaction) ois.readObject();
-			return t;
-		} catch (FileNotFoundException e) {
-			System.out.println("ERROR: Transaction file not found.");
-		} catch (IOException e) {
-		} catch (ClassNotFoundException e) {
+	public List<Transaction> findByUsernameAndAccountType(String username, AccountType accountType) {
+		File folder = new File("src/main/resources/transactions/" + username + "/" + accountType + "/");
+		File[] listOfFiles = folder.listFiles();
+		List<Transaction> transactionList = new ArrayList<>();
+		for (int i = 0; i < listOfFiles.length; i++) {
+			if (listOfFiles[i].isFile()) {
+				try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(listOfFiles[i]))) {
+					Transaction t = (Transaction) ois.readObject();
+					transactionList.add(t);
+				} catch (FileNotFoundException e) {
+					return null;
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+			}
 		}
-		return null;
+		return transactionList;
 	}
 
 	@Override
@@ -65,22 +72,21 @@ public class TransactionSerializer implements TransactionDao {
 		if (t == null) {
 			return;
 		}
-		User user = t.getUser();
-		String username = user.getUsername();
-		File f = new File("src/main/resources/transactions/" + username + "/" + t.getTransactionID() + ".txt");
+		String username = t.getBankAccount().getUsername();
+		String accountType = t.getBankAccount().getAccountTypeString();
+		File f = new File("src/main/resources/transactions/" + username + "/" + accountType + "/" + t.getTransactionID()
+				+ ".txt");
 		if (!f.exists()) {
 			return;
 		}
-		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(
-				"src/main/resources/transactions/" + username + "/" + t.getTransactionID() + ".txt"))) {
+		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("src/main/resources/transactions/"
+				+ username + "/" + accountType + "/" + t.getTransactionID() + ".txt"))) {
 
 			oos.writeObject(t);
 
 		} catch (FileNotFoundException e) {
 		} catch (IOException e) {
 		}
-		ud.updateUser(user);
-
 	}
 
 	@Override

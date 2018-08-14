@@ -1,7 +1,12 @@
 package com.revature.beans;
 
 import java.io.Serializable;
-import java.util.TreeSet;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.HashSet;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import com.revature.beans.BankAccount.AccountType;
 
 public class User implements Serializable {
 	/**
@@ -15,7 +20,7 @@ public class User implements Serializable {
 	private int adminLevel;
 	private int age;
 	private static User currentUser;
-	private TreeSet<Integer> transactionHistory;
+	private Set<Entry<String, AccountType>> sharedAccounts;
 
 	public User(String username, String password, String firstName, String lastName, int age) {
 		super();
@@ -25,13 +30,13 @@ public class User implements Serializable {
 		this.lastName = lastName;
 		this.age = age;
 		this.adminLevel = 0;
-		transactionHistory = new TreeSet<>();
+		sharedAccounts = new HashSet<>();
 	}
 
 	public User() {
 		super();
 		this.adminLevel = 0;
-		transactionHistory = new TreeSet<>();
+		sharedAccounts = new HashSet<>();
 	}
 
 	public static void setCurrentUser(User currentUser) {
@@ -94,21 +99,12 @@ public class User implements Serializable {
 		this.age = age;
 	}
 
-	public TreeSet<Integer> getTransactionHistory() {
-		return transactionHistory;
+	public Set<Entry<String, AccountType>> getSharedAccounts() {
+		return sharedAccounts;
 	}
 
-	public int getNewTransactionID() {
-		boolean duplicate = true;
-		int newID = 1;
-		while (duplicate) {
-			if (!transactionHistory.isEmpty()) {
-				int lastID = transactionHistory.last();
-				newID = lastID + 1;
-			}
-			duplicate = !transactionHistory.add(newID);
-		}
-		return newID;
+	public boolean addSharedAccount(String username, AccountType accountType) {
+		return sharedAccounts.add(new SimpleEntry<>(username, accountType));
 	}
 
 	@Override
