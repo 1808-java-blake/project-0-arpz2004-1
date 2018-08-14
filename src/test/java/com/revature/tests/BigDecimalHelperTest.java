@@ -55,7 +55,7 @@ public class BigDecimalHelperTest {
 	
 	@Test
 	public void getMoneyStringTestPositiveNumberWithMoreThanTwoDecimalPlaces() {
-		Assert.assertEquals("-$5634.55", BigDecimalHelper.getMoneyString(new BigDecimal(5634.546)));
+		Assert.assertEquals("$5634.55", BigDecimalHelper.getMoneyString(new BigDecimal(5634.546)));
 	}
 	
 	@Test

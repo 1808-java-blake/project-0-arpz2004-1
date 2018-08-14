@@ -1,6 +1,7 @@
 package com.revature.helpers;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class BigDecimalHelper {
 	public static String getMoneyString(BigDecimal bd) {
@@ -10,6 +11,6 @@ public class BigDecimalHelper {
 			amountString = "-" + amountString;
 			amount = amount.multiply(new BigDecimal(-1));
 		}
-		return amountString + amount.setScale(2);
+		return amountString + amount.setScale(2, RoundingMode.HALF_UP);
 	}
 }
