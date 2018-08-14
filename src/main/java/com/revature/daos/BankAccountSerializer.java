@@ -51,17 +51,19 @@ public class BankAccountSerializer implements BankAccountDao {
 		File folder = new File("src/main/resources/bankAccounts/" + username + "/");
 		File[] listOfFiles = folder.listFiles();
 		List<BankAccount> bankAccountList = new ArrayList<>();
-		for (int i = 0; i < listOfFiles.length; i++) {
-			if (listOfFiles[i].isFile()) {
-				try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(listOfFiles[i]))) {
-					BankAccount ba = (BankAccount) ois.readObject();
-					bankAccountList.add(ba);
-				} catch (FileNotFoundException e) {
-					return null;
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
+		if (listOfFiles != null) {
+			for (int i = 0; i < listOfFiles.length; i++) {
+				if (listOfFiles[i].isFile()) {
+					try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(listOfFiles[i]))) {
+						BankAccount ba = (BankAccount) ois.readObject();
+						bankAccountList.add(ba);
+					} catch (FileNotFoundException e) {
+						return null;
+					} catch (IOException e) {
+						e.printStackTrace();
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}

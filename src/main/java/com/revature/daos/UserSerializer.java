@@ -46,18 +46,19 @@ public class UserSerializer implements UserDao {
 		File folder = new File("src/main/resources/users/");
 		File[] listOfFiles = folder.listFiles();
 		List<User> userList = new ArrayList<>();
-		for (int i = 0; i < listOfFiles.length; i++) {
-			if (listOfFiles[i].isFile()) {
-				try (ObjectInputStream ois = new ObjectInputStream(
-						new FileInputStream(listOfFiles[i]))) {
-					User u = (User) ois.readObject();
-					userList.add(u);
-				} catch (FileNotFoundException e) {
-					return null;
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
+		if (listOfFiles != null) {
+			for (int i = 0; i < listOfFiles.length; i++) {
+				if (listOfFiles[i].isFile()) {
+					try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(listOfFiles[i]))) {
+						User u = (User) ois.readObject();
+						userList.add(u);
+					} catch (FileNotFoundException e) {
+						return null;
+					} catch (IOException e) {
+						e.printStackTrace();
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}

@@ -37,7 +37,7 @@ public class ShowUserScreen implements Screen {
 		System.out.println("Enter 1 to view user's transaction history or anything else to return to admin screen.");
 		String selection = scan.nextLine();
 		if("1".equals(selection)) {
-			return new TransactionHistoryScreen(new AdminScreen());
+			return new TransactionHistoryScreen(u, new ShowUserScreen(user));
 		}
 		return new AdminScreen();
 	}

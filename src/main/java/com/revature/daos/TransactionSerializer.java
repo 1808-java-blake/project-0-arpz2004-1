@@ -50,17 +50,19 @@ public class TransactionSerializer implements TransactionDao {
 		File folder = new File("src/main/resources/transactions/" + username + "/" + accountType + "/");
 		File[] listOfFiles = folder.listFiles();
 		List<Transaction> transactionList = new ArrayList<>();
-		for (int i = 0; i < listOfFiles.length; i++) {
-			if (listOfFiles[i].isFile()) {
-				try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(listOfFiles[i]))) {
-					Transaction t = (Transaction) ois.readObject();
-					transactionList.add(t);
-				} catch (FileNotFoundException e) {
-					return null;
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
+		if (listOfFiles != null) {
+			for (int i = 0; i < listOfFiles.length; i++) {
+				if (listOfFiles[i].isFile()) {
+					try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(listOfFiles[i]))) {
+						Transaction t = (Transaction) ois.readObject();
+						transactionList.add(t);
+					} catch (FileNotFoundException e) {
+						return null;
+					} catch (IOException e) {
+						e.printStackTrace();
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}

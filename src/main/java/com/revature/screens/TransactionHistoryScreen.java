@@ -11,6 +11,7 @@ import java.util.Scanner;
 import com.revature.beans.BankAccount;
 import com.revature.beans.BankAccount.AccountType;
 import com.revature.beans.Transaction;
+import com.revature.beans.User;
 import com.revature.daos.TransactionDao;
 import com.revature.helpers.BigDecimalHelper;
 import com.revature.helpers.StringHelper;
@@ -27,9 +28,9 @@ public class TransactionHistoryScreen implements Screen {
 		ba = accountTypeSelectScreen.getBankAccount();
 	}
 
-	public TransactionHistoryScreen(Screen screen) {
+	public TransactionHistoryScreen(User user, Screen screen) {
 		previousScreen = screen;
-		AccountTypeSelectScreen accountTypeSelectScreen = new AccountTypeSelectScreen("deposit money to");
+		AccountTypeSelectScreen accountTypeSelectScreen = new AccountTypeSelectScreen(user, "deposit money to");
 		ba = accountTypeSelectScreen.getBankAccount();
 	}
 
@@ -89,8 +90,8 @@ public class TransactionHistoryScreen implements Screen {
 						+ StringHelper.padRight(transaction.getAmountString(), amountLength)
 						+ BigDecimalHelper.getMoneyString(newAccountTypeBalance));
 			}
-			if (previousScreen instanceof AdminScreen) {
-				System.out.println("Press enter to return to admin screen.");
+			if (previousScreen instanceof ShowUserScreen) {
+				System.out.println("Press enter to return to show user screen.");
 			} else {
 				System.out.println("Press enter to return to home screen.");
 			}
