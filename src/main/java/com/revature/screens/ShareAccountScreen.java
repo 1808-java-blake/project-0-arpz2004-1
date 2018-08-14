@@ -13,8 +13,35 @@ public class ShareAccountScreen implements Screen {
 
 	public ShareAccountScreen() {
 		super();
-		AccountTypeSelectScreen accountTypeSelectScreen = new AccountTypeSelectScreen("share with another user");
-		ba = accountTypeSelectScreen.getBankAccount();
+		boolean sharableAccount = false;
+		while (!sharableAccount) {
+			AccountTypeSelectScreen accountTypeSelectScreen = new AccountTypeSelectScreen("share with another user");
+			ba = accountTypeSelectScreen.getBankAccount();
+			sharableAccount = ba.getUsername().equals(User.getCurrentUser().getUsername());
+			if (!sharableAccount) {
+				ba = null;
+				boolean validSelection = false;
+				String selection;
+				System.out.println("You can't share an account that was shared with you. You can only share accounts you created.");
+				do {
+					System.out.println("Type 1 to try again or type 2 to return to home screen.");
+					selection = scan.nextLine();
+					if (selection.length() == 1) {
+						char c = selection.charAt(0);
+						if (Character.isDigit(c)) {
+							int valueOfCharacter = Character.getNumericValue(c);
+							validSelection = valueOfCharacter >= 1 && valueOfCharacter <= 2;
+						}
+					}
+					if (!validSelection) {
+						System.out.println("Invalid option selected.");
+					}
+				} while (!validSelection);
+				if(selection.equals("2")) {
+					sharableAccount = true;
+				}
+			}
+		}
 	}
 
 	@Override
