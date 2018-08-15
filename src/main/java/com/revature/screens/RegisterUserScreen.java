@@ -18,7 +18,7 @@ public class RegisterUserScreen implements Screen {
 		User u = new User();
 		String username = "";
 		while (username.isEmpty()) {
-			System.out.println("Enter new username or type quit to return to login screen: ");
+			System.out.println("Enter new username or type quit to cancel registration and return to login screen: ");
 			username = scan.nextLine();
 			if(username.equals("quit")) {
 				return new LoginScreen();
@@ -48,7 +48,7 @@ public class RegisterUserScreen implements Screen {
 			validPassword = (!username.equals("admin") && password.length() >= 6)
 					|| (username.equals("admin") && password.equals("admin"));
 			if (validPassword) {
-				System.out.println("Confirm password or type quit to return to login screen: ");
+				System.out.println("Confirm password or type quit to cancel registration and return to login screen: ");
 				String confirmPassword = scan.nextLine();
 				if(confirmPassword.equals("quit")) {
 					return new LoginScreen();
@@ -71,7 +71,7 @@ public class RegisterUserScreen implements Screen {
 		}
 		String firstName = "";
 		while (firstName.isEmpty()) {
-			System.out.println("Enter first name or type quit to return to login screen: ");
+			System.out.println("Enter first name or type quit to cancel registration and return to login screen: ");
 			firstName = scan.nextLine();
 			if(firstName.equals("quit")) {
 				return new LoginScreen();
@@ -84,7 +84,7 @@ public class RegisterUserScreen implements Screen {
 		}
 		String lastName = "";
 		while (lastName.isEmpty()) {
-			System.out.println("Enter last name or type quit to return to login screen: ");
+			System.out.println("Enter last name or type quit to cancel registration and return to login screen: ");
 			lastName = scan.nextLine();
 			if(lastName.equals("quit")) {
 				return new LoginScreen();
@@ -97,7 +97,7 @@ public class RegisterUserScreen implements Screen {
 		}
 		String age = "";
 		while (age.isEmpty()) {
-			System.out.println("Enter age or type quit to return to login screen: ");
+			System.out.println("Enter age or type quit to cancel registration and return to login screen: ");
 			age = scan.nextLine();
 			if(age.equals("quit")) {
 				return new LoginScreen();
@@ -117,7 +117,7 @@ public class RegisterUserScreen implements Screen {
 				System.out.println("Please choose the type of account to create:");
 				System.out.println("Enter 1 to create a savings account.");
 				System.out.println("Enter 2 to create a checking account.");
-				System.out.println("Enter 3 to quit return to home screen.");
+				System.out.println("Enter 3 to cancel registration and return to login screen.");
 				accountType = scan.nextLine();
 				if (accountType.length() == 1) {
 					char c = accountType.charAt(0);
