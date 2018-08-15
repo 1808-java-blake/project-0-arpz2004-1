@@ -40,7 +40,7 @@ public class RegisterUserScreen implements Screen {
 		String password = "";
 		boolean validPassword = false;
 		while (!validPassword) {
-			System.out.println("Enter password or type quit to return to login screen: ");
+			System.out.println("Enter password or type quit to cancel registration and return to login screen: ");
 			password = scan.nextLine();
 			if(password.equals("quit")) {
 				return new LoginScreen();
