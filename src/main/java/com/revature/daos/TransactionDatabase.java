@@ -14,15 +14,17 @@ import com.revature.beans.BankAccount;
 import com.revature.beans.BankAccount.AccountType;
 import com.revature.beans.Transaction;
 import com.revature.beans.Transaction.TransactionType;
+import com.revature.util.ConnectionUtil;
 
 public class TransactionDatabase implements TransactionDao {
-	BankAccountDao bad = BankAccountDao.currentBankAccountDao;
+	private BankAccountDao bad = BankAccountDao.currentBankAccountDao;
+	private ConnectionUtil cu = ConnectionUtil.cu;
 
 	@Override
 	public void createTransaction(Transaction t) {
-		Connection connection = ConnectionFactory.getConnection();
+		Connection conn = cu.getConnection();
 		try {
-			PreparedStatement ps = connection
+			PreparedStatement ps = conn
 					.prepareStatement("INSERT INTO bank_transaction(transaction_id, username, account_type, amount, "
 							+ "transaction_type, transaction_time, user_transferred_to, account_type_transferred_to) "
 							+ "VALUES (?, ?, ?::account_type, ?, ?::transaction_type, ?, ?, ?::account_type)");
@@ -45,7 +47,7 @@ public class TransactionDatabase implements TransactionDao {
 				System.out.println("Error creating transaction.");
 			}
 			ps.close();
-			connection.close();
+			conn.close();
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
@@ -53,9 +55,9 @@ public class TransactionDatabase implements TransactionDao {
 
 	@Override
 	public List<Transaction> findByUsernameAndAccountType(String username, AccountType accountType) {
-		Connection connection = ConnectionFactory.getConnection();
+		Connection conn = cu.getConnection();
 		try {
-			PreparedStatement ps = connection.prepareStatement(
+			PreparedStatement ps = conn.prepareStatement(
 					"SELECT * FROM bank_transaction WHERE username=? AND account_type=?::account_type");
 			ps.setString(1, username);
 			ps.setString(2, accountType.toString());
@@ -67,7 +69,7 @@ public class TransactionDatabase implements TransactionDao {
 			}
 			rs.close();
 			ps.close();
-			connection.close();
+			conn.close();
 			return transactions;
 		} catch (SQLException ex) {
 			ex.printStackTrace();
@@ -96,9 +98,9 @@ public class TransactionDatabase implements TransactionDao {
 
 	@Override
 	public void updateTransaction(Transaction t) {
-		Connection connection = ConnectionFactory.getConnection();
+		Connection conn = cu.getConnection();
 		try {
-			PreparedStatement ps = connection
+			PreparedStatement ps = conn
 					.prepareStatement("UPDATE bank_transaction SET amount=?, transaction_type=?::transaction_type, "
 							+ "transaction_time=?, user_transferred_to=?, account_type_transferred_to=?::account_type "
 							+ "WHERE transaction_id=? AND username=? AND account_type=?::account_type");
@@ -121,7 +123,7 @@ public class TransactionDatabase implements TransactionDao {
 				System.out.println("Error updating transaction.");
 			}
 			ps.close();
-			connection.close();
+			conn.close();
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}

@@ -12,13 +12,16 @@ import java.util.TreeSet;
 
 import com.revature.beans.BankAccount;
 import com.revature.beans.BankAccount.AccountType;
+import com.revature.util.ConnectionUtil;
 
 public class BankAccountDatabase implements BankAccountDao {
+	private ConnectionUtil cu = ConnectionUtil.cu;
+	
 	@Override
 	public void createBankAccount(BankAccount ba) {
-		Connection connection = ConnectionFactory.getConnection();
+		Connection conn = cu.getConnection();
 		try {
-			PreparedStatement ps = connection
+			PreparedStatement ps = conn
 					.prepareStatement("INSERT INTO bank_account(username, account_type, balance) VALUES (?, ?::account_type, ?)");
 			ps.setString(1, ba.getUsername());
 			ps.setString(2, ba.getAccountType().toString());
@@ -27,7 +30,7 @@ public class BankAccountDatabase implements BankAccountDao {
 				System.out.println("Error creating bank account.");
 			}
 			ps.close();
-			connection.close();
+			conn.close();
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
@@ -35,9 +38,9 @@ public class BankAccountDatabase implements BankAccountDao {
 
 	@Override
 	public List<BankAccount> findByUsername(String username) {
-		Connection connection = ConnectionFactory.getConnection();
+		Connection conn = cu.getConnection();
 		try {
-			PreparedStatement ps = connection.prepareStatement("SELECT * FROM bank_account WHERE username=?");
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM bank_account WHERE username=?");
 			ps.setString(1, username);
 			ResultSet rs = ps.executeQuery();
 			List<BankAccount> bankAccounts = new ArrayList<>();
@@ -47,7 +50,7 @@ public class BankAccountDatabase implements BankAccountDao {
 			}
 			rs.close();
 			ps.close();
-			connection.close();
+			conn.close();
 			return bankAccounts;
 		} catch (SQLException ex) {
 			ex.printStackTrace();
@@ -57,11 +60,11 @@ public class BankAccountDatabase implements BankAccountDao {
 
 	@Override
 	public List<BankAccount> findByUsernameAndType(Set<Entry<String, AccountType>> usernamesAndAccountTypes) {
-		Connection connection = ConnectionFactory.getConnection();
+		Connection conn = cu.getConnection();
 		List<BankAccount> bankAccounts = new ArrayList<>();
 		for (Entry<String, AccountType> usernameAccountType : usernamesAndAccountTypes) {
 			try {
-				PreparedStatement ps = connection
+				PreparedStatement ps = conn
 						.prepareStatement("SELECT * FROM bank_account WHERE username=? AND account_type=?::account_type");
 				ps.setString(1, usernameAccountType.getKey());
 				ps.setString(2, usernameAccountType.getValue().toString());
@@ -77,7 +80,7 @@ public class BankAccountDatabase implements BankAccountDao {
 			}
 		}
 		try {
-			connection.close();
+			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -86,10 +89,10 @@ public class BankAccountDatabase implements BankAccountDao {
 
 	@Override
 	public BankAccount findByUsernameAndType(String username, AccountType accountType) {
-		Connection connection = ConnectionFactory.getConnection();
+		Connection conn = cu.getConnection();
 		BankAccount bankAccount = null;
 		try {
-			PreparedStatement ps = connection
+			PreparedStatement ps = conn
 					.prepareStatement("SELECT * FROM bank_account WHERE username=? AND account_type=?::account_type");
 			ps.setString(1, username);
 			ps.setString(2, accountType.toString());
@@ -99,7 +102,7 @@ public class BankAccountDatabase implements BankAccountDao {
 			}
 			rs.close();
 			ps.close();
-			connection.close();
+			conn.close();
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
@@ -107,7 +110,7 @@ public class BankAccountDatabase implements BankAccountDao {
 	}
 
 	private BankAccount extractBankAccountFromResultSet(ResultSet rs) throws SQLException {
-		Connection connection = ConnectionFactory.getConnection();
+		Connection conn = cu.getConnection();
 		BankAccount bankAccount = new BankAccount();
 		String username = rs.getString("username");
 		bankAccount.setUsername(username);
@@ -116,7 +119,7 @@ public class BankAccountDatabase implements BankAccountDao {
 		bankAccount.setBalance(rs.getBigDecimal("balance"));
 		TreeSet<Integer> transactionHistory = new TreeSet<>();
 		try {
-			PreparedStatement ps = connection
+			PreparedStatement ps = conn
 					.prepareStatement("SELECT transaction_id FROM bank_account NATURAL JOIN bank_transaction"
 							+ " WHERE username=? AND account_type=?::account_type");
 			ps.setString(1, username);
@@ -128,7 +131,7 @@ public class BankAccountDatabase implements BankAccountDao {
 			bankAccount.setTransactionHistory(transactionHistory);
 			rsBA.close();
 			ps.close();
-			connection.close();
+			conn.close();
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
@@ -137,9 +140,9 @@ public class BankAccountDatabase implements BankAccountDao {
 
 	@Override
 	public void updateBankAccount(BankAccount ba) {
-		Connection connection = ConnectionFactory.getConnection();
+		Connection conn = cu.getConnection();
 		try {
-			PreparedStatement ps = connection
+			PreparedStatement ps = conn
 					.prepareStatement("UPDATE bank_account SET balance=? WHERE username=? AND account_type=?::account_type");
 			ps.setBigDecimal(1, ba.getBalance());
 			ps.setString(2, ba.getUsername());
@@ -148,7 +151,7 @@ public class BankAccountDatabase implements BankAccountDao {
 				System.out.println("Error updating bank account.");
 			}
 			ps.close();
-			connection.close();
+			conn.close();
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}

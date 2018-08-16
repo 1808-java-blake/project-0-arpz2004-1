@@ -13,15 +13,17 @@ import java.util.Set;
 import java.util.AbstractMap.SimpleEntry;
 
 import com.revature.beans.BankAccount.AccountType;
+import com.revature.util.ConnectionUtil;
 import com.revature.beans.User;
 
 public class UserDatabase implements UserDao {
+	private ConnectionUtil cu = ConnectionUtil.cu;
 
 	@Override
 	public void createUser(User u) {
-		Connection connection = ConnectionFactory.getConnection();
+		Connection conn = cu.getConnection();
 		try {
-			PreparedStatement ps = connection.prepareStatement(
+			PreparedStatement ps = conn.prepareStatement(
 					"INSERT INTO bank_user(username, password, first_name, last_name, age, admin_level) VALUES (?, ?, ?, ?, ?, ?)");
 			ps.setString(1, u.getUsername());
 			ps.setString(2, u.getPassword());
@@ -33,7 +35,7 @@ public class UserDatabase implements UserDao {
 				System.out.println("Error updating user.");
 			}
 			ps.close();
-			connection.close();
+			conn.close();
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
@@ -41,9 +43,9 @@ public class UserDatabase implements UserDao {
 
 	@Override
 	public User findByUsername(String username) {
-		Connection connection = ConnectionFactory.getConnection();
+		Connection conn = cu.getConnection();
 		try {
-			PreparedStatement ps = connection.prepareStatement("SELECT * FROM bank_user WHERE username=?");
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM bank_user WHERE username=?");
 			ps.setString(1, username);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
@@ -51,7 +53,7 @@ public class UserDatabase implements UserDao {
 			}
 			rs.close();
 			ps.close();
-			connection.close();
+			conn.close();
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
@@ -60,10 +62,9 @@ public class UserDatabase implements UserDao {
 
 	@Override
 	public User findByUsernameAndPassword(String username, String password) {
-		Connection connection = ConnectionFactory.getConnection();
+		Connection conn = cu.getConnection();
 		try {
-			PreparedStatement ps = connection
-					.prepareStatement("SELECT * FROM bank_user WHERE username=? AND password=?");
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM bank_user WHERE username=? AND password=?");
 			ps.setString(1, username);
 			ps.setString(2, password);
 			ResultSet rs = ps.executeQuery();
@@ -72,7 +73,7 @@ public class UserDatabase implements UserDao {
 			}
 			rs.close();
 			ps.close();
-			connection.close();
+			conn.close();
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
@@ -81,9 +82,9 @@ public class UserDatabase implements UserDao {
 
 	@Override
 	public List<User> getAllUsers() {
-		Connection connection = ConnectionFactory.getConnection();
+		Connection conn = cu.getConnection();
 		try {
-			Statement stmt = connection.createStatement();
+			Statement stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM bank_user");
 			List<User> users = new ArrayList<>();
 			while (rs.next()) {
@@ -91,7 +92,7 @@ public class UserDatabase implements UserDao {
 				users.add(user);
 			}
 			rs.close();
-			connection.close();
+			conn.close();
 			return users;
 		} catch (SQLException ex) {
 			ex.printStackTrace();
@@ -113,9 +114,8 @@ public class UserDatabase implements UserDao {
 
 	private Set<Entry<String, AccountType>> findSharedAccounts(User u) throws SQLException {
 		Set<Entry<String, AccountType>> sharedAccounts = new HashSet<>();
-		Connection connection = ConnectionFactory.getConnection();
-		PreparedStatement ps = connection
-				.prepareStatement("SELECT * FROM shared_users_accounts WHERE user_shared_with=?");
+		Connection conn = cu.getConnection();
+		PreparedStatement ps = conn.prepareStatement("SELECT * FROM shared_users_accounts WHERE user_shared_with=?");
 		ps.setString(1, u.getUsername());
 		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
@@ -125,15 +125,15 @@ public class UserDatabase implements UserDao {
 		}
 		rs.close();
 		ps.close();
-		connection.close();
+		conn.close();
 		return sharedAccounts;
 	}
 
 	@Override
 	public void updateUser(User u) {
-		Connection connection = ConnectionFactory.getConnection();
+		Connection conn = cu.getConnection();
 		try {
-			PreparedStatement ps = connection.prepareStatement(
+			PreparedStatement ps = conn.prepareStatement(
 					"UPDATE bank_user SET password=?, first_name=?, last_name=?, age=?, admin_level=? WHERE username=?");
 			ps.setString(1, u.getPassword());
 			ps.setString(2, u.getFirstName());
@@ -147,21 +147,20 @@ public class UserDatabase implements UserDao {
 				System.out.println("Error updating user.");
 			}
 			ps.close();
-			connection.close();
+			conn.close();
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
 	}
 
 	private void createSharedBankAccounts(User u) throws SQLException {
-		Connection connection = ConnectionFactory.getConnection();
+		Connection conn = cu.getConnection();
 		Set<Entry<String, AccountType>> savedSharedAccounts = findSharedAccounts(u);
 		Set<Entry<String, AccountType>> sharedAccounts = new HashSet<>(u.getSharedAccounts());
 		sharedAccounts.removeAll(savedSharedAccounts);
 		for (Entry<String, AccountType> sharedAccount : sharedAccounts) {
-			PreparedStatement ps = connection
-					.prepareStatement("INSERT INTO shared_users_accounts(username, account_type, "
-							+ "user_shared_with) VALUES (?, ?::account_type, ?) ON CONFLICT DO NOTHING");
+			PreparedStatement ps = conn.prepareStatement("INSERT INTO shared_users_accounts(username, account_type, "
+					+ "user_shared_with) VALUES (?, ?::account_type, ?) ON CONFLICT DO NOTHING");
 			ps.setString(1, sharedAccount.getKey());
 			ps.setString(2, sharedAccount.getValue().toString());
 			ps.setString(3, u.getUsername());
@@ -170,7 +169,7 @@ public class UserDatabase implements UserDao {
 			}
 			ps.close();
 		}
-		connection.close();
+		conn.close();
 	}
 
 	@Override
