@@ -26,6 +26,8 @@ public class BankAccountDatabase implements BankAccountDao {
 			if(ps.executeUpdate() != 1) {
 				System.out.println("Error creating bank account.");
 			}
+			ps.close();
+			connection.close();
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
@@ -43,6 +45,9 @@ public class BankAccountDatabase implements BankAccountDao {
 				BankAccount bankAccount = extractBankAccountFromResultSet(rs);
 				bankAccounts.add(bankAccount);
 			}
+			rs.close();
+			ps.close();
+			connection.close();
 			return bankAccounts;
 		} catch (SQLException ex) {
 			ex.printStackTrace();
@@ -65,6 +70,9 @@ public class BankAccountDatabase implements BankAccountDao {
 					BankAccount bankAccount = extractBankAccountFromResultSet(rs);
 					bankAccounts.add(bankAccount);
 				}
+				rs.close();
+				ps.close();
+				connection.close();
 			} catch (SQLException ex) {
 				ex.printStackTrace();
 			}
@@ -85,6 +93,9 @@ public class BankAccountDatabase implements BankAccountDao {
 			if (rs.next()) {
 				bankAccount = extractBankAccountFromResultSet(rs);
 			}
+			rs.close();
+			ps.close();
+			connection.close();
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
@@ -111,6 +122,9 @@ public class BankAccountDatabase implements BankAccountDao {
 				transactionHistory.add(rsBA.getInt("transaction_id"));
 			}
 			bankAccount.setTransactionHistory(transactionHistory);
+			rs.close();
+			ps.close();
+			connection.close();
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
@@ -122,13 +136,15 @@ public class BankAccountDatabase implements BankAccountDao {
 		Connection connection = ConnectionFactory.getConnection();
 		try {
 			PreparedStatement ps = connection
-					.prepareStatement("UPDATE bank_account SET username=?, account_type=?::account_type, balance=?");
-			ps.setString(1, ba.getUsername());
-			ps.setString(2, ba.getAccountType().toString());
-			ps.setBigDecimal(3, ba.getBalance());
+					.prepareStatement("UPDATE bank_account SET balance=? WHERE username=? AND account_type=?::account_type");
+			ps.setBigDecimal(1, ba.getBalance());
+			ps.setString(2, ba.getUsername());
+			ps.setString(3, ba.getAccountType().toString());
 			if(ps.executeUpdate() != 1) {
 				System.out.println("Error updating bank account.");
 			}
+			ps.close();
+			connection.close();
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}

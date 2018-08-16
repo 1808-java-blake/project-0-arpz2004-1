@@ -27,6 +27,8 @@ public class UserDatabase implements UserDao {
 			if(ps.executeUpdate() != 1) {
 				System.out.println("Error creating user.");
 			}
+			ps.close();
+			connection.close();
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
@@ -42,6 +44,9 @@ public class UserDatabase implements UserDao {
 			if (rs.next()) {
 				return extractUserFromResultSet(rs);
 			}
+			rs.close();
+			ps.close();
+			connection.close();
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
@@ -59,6 +64,9 @@ public class UserDatabase implements UserDao {
 			if (rs.next()) {
 				return extractUserFromResultSet(rs);
 			}
+			rs.close();
+			ps.close();
+			connection.close();
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
@@ -76,6 +84,8 @@ public class UserDatabase implements UserDao {
 				User user = extractUserFromResultSet(rs);
 				users.add(user);
 			}
+			rs.close();
+			connection.close();
 			return users;
 		} catch (SQLException ex) {
 			ex.printStackTrace();
@@ -91,6 +101,7 @@ public class UserDatabase implements UserDao {
 		user.setLastName(rs.getString("last_name"));
 		user.setAge(rs.getInt("age"));
 		user.setAdminLevel(rs.getInt("admin_level"));
+		rs.close();
 		return user;
 	}
 
@@ -99,16 +110,18 @@ public class UserDatabase implements UserDao {
 		Connection connection = ConnectionFactory.getConnection();
 		try {
 			PreparedStatement ps = connection.prepareStatement(
-					"UPDATE bank_user SET username=?, password=?, first_name=?, last_name=?, age=?, admin_level=?");
-			ps.setString(1, u.getUsername());
-			ps.setString(2, u.getPassword());
-			ps.setString(3, u.getFirstName());
-			ps.setString(4, u.getLastName());
-			ps.setInt(5, u.getAge());
-			ps.setInt(6, u.getAdminLevel());
+					"UPDATE bank_user SET password=?, first_name=?, last_name=?, age=?, admin_level=? WHERE username=?");
+			ps.setString(1, u.getPassword());
+			ps.setString(2, u.getFirstName());
+			ps.setString(3, u.getLastName());
+			ps.setInt(4, u.getAge());
+			ps.setInt(5, u.getAdminLevel());
+			ps.setString(6, u.getUsername());
 			if(ps.executeUpdate() != 1) {
 				System.out.println("Error updating user.");
 			}
+			ps.close();
+			connection.close();
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}

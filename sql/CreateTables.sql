@@ -26,7 +26,7 @@ CREATE TABLE shared_users_accounts
 	FOREIGN KEY (username, account_type) REFERENCES bank_account(username, account_type),
 	PRIMARY KEY(username, account_type, user_shared_with)
 );
-CREATE TYPE transaction_type AS ENUM ('WITHDRAWAL', 'DEPOSIT', 'WIRE TRANSFER');
+CREATE TYPE transaction_type AS ENUM ('WITHDRAWAL', 'DEPOSIT', 'WIRE_TRANSFER');
 CREATE TABLE bank_transaction
 (
 	transaction_id INTEGER NOT NULL,
