@@ -29,9 +29,7 @@ public class UserDatabase implements UserDao {
 			ps.setString(4, u.getLastName());
 			ps.setInt(5, u.getAge());
 			ps.setInt(6, u.getAdminLevel());
-			if (ps.executeUpdate() == 1) {
-				createSharedBankAccounts(u);
-			} else {
+			if (ps.executeUpdate() != 1) {
 				System.out.println("Error updating user.");
 			}
 			ps.close();
@@ -157,7 +155,10 @@ public class UserDatabase implements UserDao {
 
 	private void createSharedBankAccounts(User u) throws SQLException {
 		Connection connection = ConnectionFactory.getConnection();
-		for (Entry<String, AccountType> sharedAccount : u.getSharedAccounts()) {
+		Set<Entry<String, AccountType>> savedSharedAccounts = findSharedAccounts(u);
+		Set<Entry<String, AccountType>> sharedAccounts = new HashSet<>(u.getSharedAccounts());
+		sharedAccounts.removeAll(savedSharedAccounts);
+		for (Entry<String, AccountType> sharedAccount : sharedAccounts) {
 			PreparedStatement ps = connection
 					.prepareStatement("INSERT INTO shared_users_accounts(username, account_type, "
 							+ "user_shared_with) VALUES (?, ?::account_type, ?) ON CONFLICT DO NOTHING");
