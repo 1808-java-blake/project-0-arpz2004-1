@@ -23,17 +23,25 @@ public class TransactionDatabase implements TransactionDao {
 		Connection connection = ConnectionFactory.getConnection();
 		try {
 			PreparedStatement ps = connection
-					.prepareStatement("INSERT INTO bank_transactions(username, account_type, amount, "
+					.prepareStatement("INSERT INTO bank_transaction(username, account_type, amount, "
 							+ "transaction_type, transaction_time, user_transferred_to, "
-							+ "account_type_transferred_to) VALUES (?, ?, ?, ?, ?, ?, ?)");
+							+ "account_type_transferred_to) VALUES (?, ?::account_type, ?, ?::transaction_type, "
+							+ "?, ?, ?::account_type)");
 			ps.setString(1, t.getBankAccount().getUsername());
-			ps.setString(2, t.getBankAccount().getAccountTypeString());
+			ps.setString(2, t.getBankAccount().getAccountType().toString());
 			ps.setBigDecimal(3, t.getAmount());
-			ps.setString(4, t.getTransactionTypeString());
+			ps.setString(4, t.getTransactionType().toString());
 			ps.setTimestamp(5, Timestamp.valueOf(t.getTime()));
-			ps.setString(6, t.getBankAccountTransferredTo().getUsername());
-			ps.setString(7, t.getBankAccountTransferredTo().getAccountTypeString());
-			if(ps.executeUpdate() != 1) {
+			BankAccount baTransfer = t.getBankAccountTransferredTo();
+			String userTransferredTo = null;
+			String accountTypeTransferredTo = null;
+			if (baTransfer != null) {
+				userTransferredTo = baTransfer.getUsername();
+				accountTypeTransferredTo = baTransfer.getAccountType().toString();
+			}
+			ps.setString(6, userTransferredTo);
+			ps.setString(7, accountTypeTransferredTo);
+			if (ps.executeUpdate() != 1) {
 				System.out.println("Error creating transaction.");
 			}
 		} catch (SQLException ex) {
@@ -46,9 +54,9 @@ public class TransactionDatabase implements TransactionDao {
 		Connection connection = ConnectionFactory.getConnection();
 		try {
 			PreparedStatement ps = connection
-					.prepareStatement("SELECT * FROM bank_transactions WHERE username=? AND account_type=?");
+					.prepareStatement("SELECT * FROM bank_transaction WHERE username=? AND account_type=?::account_type");
 			ps.setString(1, username);
-			ps.setString(2, accountType.getValue());
+			ps.setString(2, accountType.toString());
 			ResultSet rs = ps.executeQuery();
 			List<Transaction> transactions = new ArrayList<>();
 			while (rs.next()) {
@@ -80,16 +88,24 @@ public class TransactionDatabase implements TransactionDao {
 		Connection connection = ConnectionFactory.getConnection();
 		try {
 			PreparedStatement ps = connection
-					.prepareStatement("UPDATE bank_transactions SET username=?, account_type=?, amount=?, "
-							+ "transaction_type=?, transaction_time=?, user_transferred_to=?, account_type_transferred_to=?");
+					.prepareStatement("UPDATE bank_transaction SET username=?, account_type=?::account_type, amount=?, "
+							+ "transaction_type=?::transaction_type, transaction_time=?, user_transferred_to=?, "
+							+ "account_type_transferred_to=?::account_type");
 			ps.setString(1, t.getBankAccount().getUsername());
-			ps.setString(2, t.getBankAccount().getAccountTypeString());
+			ps.setString(2, t.getBankAccount().getAccountType().toString());
 			ps.setBigDecimal(3, t.getAmount());
-			ps.setString(4, t.getTransactionTypeString());
+			ps.setString(4, t.getTransactionType().toString());
 			ps.setTimestamp(5, Timestamp.valueOf(t.getTime()));
-			ps.setString(6, t.getBankAccountTransferredTo().getUsername());
-			ps.setString(7, t.getBankAccountTransferredTo().getAccountTypeString());
-			if(ps.executeUpdate() != 1) {
+			BankAccount baTransfer = t.getBankAccountTransferredTo();
+			String userTransferredTo = null;
+			String accountTypeTransferredTo = null;
+			if (baTransfer != null) {
+				userTransferredTo = baTransfer.getUsername();
+				accountTypeTransferredTo = baTransfer.getAccountType().toString();
+			}
+			ps.setString(6, userTransferredTo);
+			ps.setString(7, accountTypeTransferredTo);
+			if (ps.executeUpdate() != 1) {
 				System.out.println("Error updating transaction.");
 			}
 		} catch (SQLException ex) {

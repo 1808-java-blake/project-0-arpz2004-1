@@ -19,9 +19,9 @@ public class BankAccountDatabase implements BankAccountDao {
 		Connection connection = ConnectionFactory.getConnection();
 		try {
 			PreparedStatement ps = connection
-					.prepareStatement("INSERT INTO bank_accounts(username, account_type, balance) VALUES (?, ?, ?)");
+					.prepareStatement("INSERT INTO bank_account(username, account_type, balance) VALUES (?, ?::account_type, ?)");
 			ps.setString(1, ba.getUsername());
-			ps.setString(2, ba.getAccountTypeString());
+			ps.setString(2, ba.getAccountType().toString());
 			ps.setBigDecimal(3, ba.getBalance());
 			if(ps.executeUpdate() != 1) {
 				System.out.println("Error creating bank account.");
@@ -35,7 +35,7 @@ public class BankAccountDatabase implements BankAccountDao {
 	public List<BankAccount> findByUsername(String username) {
 		Connection connection = ConnectionFactory.getConnection();
 		try {
-			PreparedStatement ps = connection.prepareStatement("SELECT * FROM bank_accounts WHERE username=?");
+			PreparedStatement ps = connection.prepareStatement("SELECT * FROM bank_account WHERE username=?");
 			ps.setString(1, username);
 			ResultSet rs = ps.executeQuery();
 			List<BankAccount> bankAccounts = new ArrayList<>();
@@ -57,9 +57,9 @@ public class BankAccountDatabase implements BankAccountDao {
 		for (Entry<String, AccountType> usernameAccountType : usernamesAndAccountTypes) {
 			try {
 				PreparedStatement ps = connection
-						.prepareStatement("SELECT * FROM bank_accounts WHERE username=? AND account_type=?");
+						.prepareStatement("SELECT * FROM bank_account WHERE username=? AND account_type=?::account_type");
 				ps.setString(1, usernameAccountType.getKey());
-				ps.setString(2, usernameAccountType.getValue().getValue());
+				ps.setString(2, usernameAccountType.getValue().toString());
 				ResultSet rs = ps.executeQuery();
 				while (rs.next()) {
 					BankAccount bankAccount = extractBankAccountFromResultSet(rs);
@@ -78,9 +78,9 @@ public class BankAccountDatabase implements BankAccountDao {
 		BankAccount bankAccount = null;
 		try {
 			PreparedStatement ps = connection
-					.prepareStatement("SELECT * FROM bank_accounts WHERE username=? AND account_type=?");
+					.prepareStatement("SELECT * FROM bank_account WHERE username=? AND account_type=?::account_type");
 			ps.setString(1, username);
-			ps.setString(2, accountType.getValue());
+			ps.setString(2, accountType.toString());
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				bankAccount = extractBankAccountFromResultSet(rs);
@@ -104,9 +104,9 @@ public class BankAccountDatabase implements BankAccountDao {
 		Connection connection = ConnectionFactory.getConnection();
 		try {
 			PreparedStatement ps = connection
-					.prepareStatement("UPDATE bank_accounts SET username=?, account_type=?, balance=?");
+					.prepareStatement("UPDATE bank_account SET username=?, account_type=?::account_type, balance=?");
 			ps.setString(1, ba.getUsername());
-			ps.setString(2, ba.getAccountTypeString());
+			ps.setString(2, ba.getAccountType().toString());
 			ps.setBigDecimal(3, ba.getBalance());
 			if(ps.executeUpdate() != 1) {
 				System.out.println("Error updating bank account.");
