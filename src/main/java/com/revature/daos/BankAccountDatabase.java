@@ -8,12 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeSet;
 
 import com.revature.beans.BankAccount;
 import com.revature.beans.BankAccount.AccountType;
 
 public class BankAccountDatabase implements BankAccountDao {
-
 	@Override
 	public void createBankAccount(BankAccount ba) {
 		Connection connection = ConnectionFactory.getConnection();
@@ -92,10 +92,28 @@ public class BankAccountDatabase implements BankAccountDao {
 	}
 
 	private BankAccount extractBankAccountFromResultSet(ResultSet rs) throws SQLException {
+		Connection connection = ConnectionFactory.getConnection();
 		BankAccount bankAccount = new BankAccount();
-		bankAccount.setUsername(rs.getString("username"));
-		bankAccount.setAccountType(AccountType.valueOf(rs.getString("account_type")));
+		String username = rs.getString("username");
+		bankAccount.setUsername(username);
+		AccountType accountType = AccountType.valueOf(rs.getString("account_type"));
+		bankAccount.setAccountType(accountType);
 		bankAccount.setBalance(rs.getBigDecimal("balance"));
+		TreeSet<Integer> transactionHistory = new TreeSet<>();
+		try {
+			PreparedStatement ps = connection
+					.prepareStatement("SELECT transaction_id FROM bank_account NATURAL JOIN bank_transaction"
+							+ " WHERE username=? AND account_type=?::account_type");
+			ps.setString(1, username);
+			ps.setString(2, accountType.toString());
+			ResultSet rsBA = ps.executeQuery();
+			while (rsBA.next()) {
+				transactionHistory.add(rsBA.getInt("transaction_id"));
+			}
+			bankAccount.setTransactionHistory(transactionHistory);
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
 		return bankAccount;
 	}
 

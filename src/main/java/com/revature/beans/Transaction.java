@@ -33,8 +33,7 @@ public class Transaction implements Serializable {
 	private TransactionType transactionType;
 	private BankAccount bankAccountTransferredTo;
 
-	public Transaction(BigDecimal amount, LocalDateTime time, BankAccount ba,
-			TransactionType transactionType) {
+	public Transaction(BigDecimal amount, LocalDateTime time, BankAccount ba, TransactionType transactionType) {
 		super();
 		this.amount = amount;
 		this.time = time;
@@ -43,10 +42,16 @@ public class Transaction implements Serializable {
 		this.transactionType = transactionType;
 	}
 
-	public Transaction(BigDecimal amount, LocalDateTime time, BankAccount ba,
-			TransactionType transactionType, BankAccount bankAccountTransferredTo) {
+	public Transaction(BigDecimal amount, LocalDateTime time, BankAccount ba, TransactionType transactionType,
+			BankAccount bankAccountTransferredTo) {
 		this(amount, time, ba, transactionType);
 		this.bankAccountTransferredTo = bankAccountTransferredTo;
+	}
+
+	public Transaction(int transactionID, BigDecimal amount, LocalDateTime time, BankAccount ba,
+			TransactionType transactionType, BankAccount bankAccountTransferredTo) {
+		this(amount, time, ba, transactionType, bankAccountTransferredTo);
+		this.transactionID = transactionID;
 	}
 
 	public BankAccount getBankAccount() {
@@ -56,6 +61,7 @@ public class Transaction implements Serializable {
 	public void setBankAccount(BankAccount ba) {
 		this.ba = ba;
 	}
+
 	public int getTransactionID() {
 		return transactionID;
 	}
@@ -111,8 +117,7 @@ public class Transaction implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Transaction [transactionID=" + transactionID + ", amount=" + amount
-				+ ", time=" + time + "]";
+		return "Transaction [transactionID=" + transactionID + ", amount=" + amount + ", time=" + time + "]";
 	}
 
 }

@@ -29,6 +29,7 @@ CREATE TABLE shared_users_accounts
 CREATE TYPE transaction_type AS ENUM ('WITHDRAWAL', 'DEPOSIT', 'WIRE TRANSFER');
 CREATE TABLE bank_transaction
 (
+	transaction_id INTEGER NOT NULL,
     username VARCHAR(32) NOT NULL,
 	account_type account_type NOT NULL,
 	amount NUMERIC(12, 2) NOT NULL,
@@ -36,6 +37,7 @@ CREATE TABLE bank_transaction
 	transaction_time TIMESTAMP NOT NULL,
 	user_transferred_to VARCHAR(32),
 	account_type_transferred_to account_type,
+	PRIMARY KEY (transaction_id, username, account_type),
 	FOREIGN KEY (username, account_type) REFERENCES bank_account(username, account_type),
 	FOREIGN KEY (user_transferred_to, account_type_transferred_to) REFERENCES bank_account(username, account_type)
 );

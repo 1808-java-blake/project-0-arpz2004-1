@@ -92,6 +92,14 @@ public class BankAccount implements Serializable {
 		this.username = username;
 	}
 
+	public TreeSet<Integer> getTransactionHistory() {
+		return transactionHistory;
+	}
+
+	public void setTransactionHistory(TreeSet<Integer> transactionHistory) {
+		this.transactionHistory = transactionHistory;
+	}
+
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
