@@ -33,6 +33,9 @@ public class TransactionDatabase implements TransactionDao {
 			ps.setTimestamp(5, Timestamp.valueOf(t.getTime()));
 			ps.setString(6, t.getBankAccountTransferredTo().getUsername());
 			ps.setString(7, t.getBankAccountTransferredTo().getAccountTypeString());
+			if(ps.executeUpdate() != 1) {
+				System.out.println("Error creating transaction.");
+			}
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
@@ -86,6 +89,9 @@ public class TransactionDatabase implements TransactionDao {
 			ps.setTimestamp(5, Timestamp.valueOf(t.getTime()));
 			ps.setString(6, t.getBankAccountTransferredTo().getUsername());
 			ps.setString(7, t.getBankAccountTransferredTo().getAccountTypeString());
+			if(ps.executeUpdate() != 1) {
+				System.out.println("Error updating transaction.");
+			}
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}

@@ -6,7 +6,7 @@ import com.revature.beans.BankAccount.AccountType;
 import com.revature.beans.Transaction;
 
 public interface TransactionDao {
-	public static final TransactionDao currentTransactionDao = new TransactionSerializer();
+	public static final TransactionDao currentTransactionDao = new TransactionDatabase();
 	
 	void createTransaction(Transaction t);
 	public List<Transaction> findByUsernameAndAccountType(String username, AccountType accountType);

@@ -8,7 +8,7 @@ import com.revature.beans.BankAccount;
 import com.revature.beans.BankAccount.AccountType;
 
 public interface BankAccountDao {
-	public static final BankAccountDao currentBankAccountDao = new BankAccountSerializer();
+	public static final BankAccountDao currentBankAccountDao = new BankAccountDatabase();
 	
 	void createBankAccount(BankAccount ba);
 	List<BankAccount> findByUsername(String username);

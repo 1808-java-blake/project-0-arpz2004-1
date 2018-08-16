@@ -23,6 +23,9 @@ public class BankAccountDatabase implements BankAccountDao {
 			ps.setString(1, ba.getUsername());
 			ps.setString(2, ba.getAccountTypeString());
 			ps.setBigDecimal(3, ba.getBalance());
+			if(ps.executeUpdate() != 1) {
+				System.out.println("Error creating bank account.");
+			}
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
@@ -105,6 +108,9 @@ public class BankAccountDatabase implements BankAccountDao {
 			ps.setString(1, ba.getUsername());
 			ps.setString(2, ba.getAccountTypeString());
 			ps.setBigDecimal(3, ba.getBalance());
+			if(ps.executeUpdate() != 1) {
+				System.out.println("Error updating bank account.");
+			}
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}

@@ -24,6 +24,9 @@ public class UserDatabase implements UserDao {
 			ps.setString(4, u.getLastName());
 			ps.setInt(5, u.getAge());
 			ps.setInt(6, u.getAdminLevel());
+			if(ps.executeUpdate() != 1) {
+				System.out.println("Error creating user.");
+			}
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
@@ -103,6 +106,9 @@ public class UserDatabase implements UserDao {
 			ps.setString(4, u.getLastName());
 			ps.setInt(5, u.getAge());
 			ps.setInt(6, u.getAdminLevel());
+			if(ps.executeUpdate() != 1) {
+				System.out.println("Error updating user.");
+			}
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
