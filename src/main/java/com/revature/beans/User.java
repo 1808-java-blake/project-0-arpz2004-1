@@ -106,6 +106,10 @@ public class User implements Serializable {
 	public boolean addSharedAccount(String username, AccountType accountType) {
 		return sharedAccounts.add(new SimpleEntry<>(username, accountType));
 	}
+	
+	public void setSharedAccounts(Set<Entry<String, AccountType>> sharedAccounts) {
+		this.sharedAccounts = sharedAccounts;
+	}
 
 	@Override
 	public int hashCode() {

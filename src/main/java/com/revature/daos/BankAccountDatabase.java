@@ -72,10 +72,14 @@ public class BankAccountDatabase implements BankAccountDao {
 				}
 				rs.close();
 				ps.close();
-				connection.close();
 			} catch (SQLException ex) {
 				ex.printStackTrace();
 			}
+		}
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 		return bankAccounts;
 	}

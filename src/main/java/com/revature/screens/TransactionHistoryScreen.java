@@ -24,13 +24,13 @@ public class TransactionHistoryScreen implements Screen {
 
 	public TransactionHistoryScreen() {
 		previousScreen = new HomeScreen();
-		AccountTypeSelectScreen accountTypeSelectScreen = new AccountTypeSelectScreen("deposit money to");
+		AccountTypeSelectScreen accountTypeSelectScreen = new AccountTypeSelectScreen("view transaction history of");
 		ba = accountTypeSelectScreen.getBankAccount();
 	}
 
 	public TransactionHistoryScreen(User user, Screen screen) {
 		previousScreen = screen;
-		AccountTypeSelectScreen accountTypeSelectScreen = new AccountTypeSelectScreen(user, "deposit money to");
+		AccountTypeSelectScreen accountTypeSelectScreen = new AccountTypeSelectScreen(user, "view transaction history of");
 		ba = accountTypeSelectScreen.getBankAccount();
 	}
 

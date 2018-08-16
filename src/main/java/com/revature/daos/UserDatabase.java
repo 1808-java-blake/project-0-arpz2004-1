@@ -6,8 +6,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.AbstractMap.SimpleEntry;
 
+import com.revature.beans.BankAccount.AccountType;
 import com.revature.beans.User;
 
 public class UserDatabase implements UserDao {
@@ -24,8 +29,10 @@ public class UserDatabase implements UserDao {
 			ps.setString(4, u.getLastName());
 			ps.setInt(5, u.getAge());
 			ps.setInt(6, u.getAdminLevel());
-			if(ps.executeUpdate() != 1) {
-				System.out.println("Error creating user.");
+			if (ps.executeUpdate() == 1) {
+				createSharedBankAccounts(u);
+			} else {
+				System.out.println("Error updating user.");
 			}
 			ps.close();
 			connection.close();
@@ -57,7 +64,8 @@ public class UserDatabase implements UserDao {
 	public User findByUsernameAndPassword(String username, String password) {
 		Connection connection = ConnectionFactory.getConnection();
 		try {
-			PreparedStatement ps = connection.prepareStatement("SELECT * FROM bank_user WHERE username=? AND password=?");
+			PreparedStatement ps = connection
+					.prepareStatement("SELECT * FROM bank_user WHERE username=? AND password=?");
 			ps.setString(1, username);
 			ps.setString(2, password);
 			ResultSet rs = ps.executeQuery();
@@ -101,7 +109,26 @@ public class UserDatabase implements UserDao {
 		user.setLastName(rs.getString("last_name"));
 		user.setAge(rs.getInt("age"));
 		user.setAdminLevel(rs.getInt("admin_level"));
+		user.setSharedAccounts(findSharedAccounts(user));
 		return user;
+	}
+
+	private Set<Entry<String, AccountType>> findSharedAccounts(User u) throws SQLException {
+		Set<Entry<String, AccountType>> sharedAccounts = new HashSet<>();
+		Connection connection = ConnectionFactory.getConnection();
+		PreparedStatement ps = connection
+				.prepareStatement("SELECT * FROM shared_users_accounts WHERE user_shared_with=?");
+		ps.setString(1, u.getUsername());
+		ResultSet rs = ps.executeQuery();
+		while (rs.next()) {
+			String accountOwner = rs.getString("username");
+			AccountType accountType = AccountType.valueOf(rs.getString("account_type"));
+			sharedAccounts.add(new SimpleEntry<>(accountOwner, accountType));
+		}
+		rs.close();
+		ps.close();
+		connection.close();
+		return sharedAccounts;
 	}
 
 	@Override
@@ -116,7 +143,9 @@ public class UserDatabase implements UserDao {
 			ps.setInt(4, u.getAge());
 			ps.setInt(5, u.getAdminLevel());
 			ps.setString(6, u.getUsername());
-			if(ps.executeUpdate() != 1) {
+			if (ps.executeUpdate() == 1) {
+				createSharedBankAccounts(u);
+			} else {
 				System.out.println("Error updating user.");
 			}
 			ps.close();
@@ -124,6 +153,23 @@ public class UserDatabase implements UserDao {
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
+	}
+
+	private void createSharedBankAccounts(User u) throws SQLException {
+		Connection connection = ConnectionFactory.getConnection();
+		for (Entry<String, AccountType> sharedAccount : u.getSharedAccounts()) {
+			PreparedStatement ps = connection
+					.prepareStatement("INSERT INTO shared_users_accounts(username, account_type, "
+							+ "user_shared_with) VALUES (?, ?::account_type, ?) ON CONFLICT DO NOTHING");
+			ps.setString(1, sharedAccount.getKey());
+			ps.setString(2, sharedAccount.getValue().toString());
+			ps.setString(3, u.getUsername());
+			if (ps.executeUpdate() != 1) {
+				System.out.println("Error creating shared bank account.");
+			}
+			ps.close();
+		}
+		connection.close();
 	}
 
 	@Override
