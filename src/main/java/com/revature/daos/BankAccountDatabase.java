@@ -18,8 +18,8 @@ public class BankAccountDatabase implements BankAccountDao {
 	public void createBankAccount(BankAccount ba) {
 		Connection connection = ConnectionFactory.getConnection();
 		try {
-			PreparedStatement ps = connection.prepareStatement(
-					"INSERT INTO bank_accounts(username, account_type, balance) VALUES (?, ?, ?)");
+			PreparedStatement ps = connection
+					.prepareStatement("INSERT INTO bank_accounts(username, account_type, balance) VALUES (?, ?, ?)");
 			ps.setString(1, ba.getUsername());
 			ps.setString(2, ba.getAccountTypeString());
 			ps.setBigDecimal(3, ba.getBalance());
@@ -53,7 +53,8 @@ public class BankAccountDatabase implements BankAccountDao {
 		List<BankAccount> bankAccounts = new ArrayList<>();
 		for (Entry<String, AccountType> usernameAccountType : usernamesAndAccountTypes) {
 			try {
-				PreparedStatement ps = connection.prepareStatement("SELECT * FROM bank_accounts WHERE username=? AND account_type=?");
+				PreparedStatement ps = connection
+						.prepareStatement("SELECT * FROM bank_accounts WHERE username=? AND account_type=?");
 				ps.setString(1, usernameAccountType.getKey());
 				ps.setString(2, usernameAccountType.getValue().getValue());
 				ResultSet rs = ps.executeQuery();
@@ -67,7 +68,26 @@ public class BankAccountDatabase implements BankAccountDao {
 		}
 		return bankAccounts;
 	}
-	
+
+	@Override
+	public BankAccount findByUsernameAndType(String username, AccountType accountType) {
+		Connection connection = ConnectionFactory.getConnection();
+		BankAccount bankAccount = null;
+		try {
+			PreparedStatement ps = connection
+					.prepareStatement("SELECT * FROM bank_accounts WHERE username=? AND account_type=?");
+			ps.setString(1, username);
+			ps.setString(2, accountType.getValue());
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				bankAccount = extractBankAccountFromResultSet(rs);
+			}
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		return bankAccount;
+	}
+
 	private BankAccount extractBankAccountFromResultSet(ResultSet rs) throws SQLException {
 		BankAccount bankAccount = new BankAccount();
 		bankAccount.setUsername(rs.getString("username"));
@@ -80,8 +100,8 @@ public class BankAccountDatabase implements BankAccountDao {
 	public void updateBankAccount(BankAccount ba) {
 		Connection connection = ConnectionFactory.getConnection();
 		try {
-			PreparedStatement ps = connection.prepareStatement(
-					"UPDATE bank_accounts SET username=?, account_type=?, balance=?");
+			PreparedStatement ps = connection
+					.prepareStatement("UPDATE bank_accounts SET username=?, account_type=?, balance=?");
 			ps.setString(1, ba.getUsername());
 			ps.setString(2, ba.getAccountTypeString());
 			ps.setBigDecimal(3, ba.getBalance());
@@ -93,7 +113,7 @@ public class BankAccountDatabase implements BankAccountDao {
 	@Override
 	public void deleteBankAccount(BankAccount ba) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

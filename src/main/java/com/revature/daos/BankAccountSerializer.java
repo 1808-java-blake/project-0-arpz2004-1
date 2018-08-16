@@ -90,6 +90,22 @@ public class BankAccountSerializer implements BankAccountDao {
 	}
 
 	@Override
+	public BankAccount findByUsernameAndType(String username, AccountType accountType) {
+		BankAccount ba = null;
+		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("src/main/resources/bankAccounts/"
+				+ username + "/" + accountType.getValue() + ".txt"))) {
+			ba = (BankAccount) ois.readObject();
+		} catch (FileNotFoundException e) {
+			return null;
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return ba;
+	}
+
+	@Override
 	public void updateBankAccount(BankAccount ba) {
 		if (ba == null) {
 			return;

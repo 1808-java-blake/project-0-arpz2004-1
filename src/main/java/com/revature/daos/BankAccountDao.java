@@ -13,6 +13,7 @@ public interface BankAccountDao {
 	void createBankAccount(BankAccount ba);
 	List<BankAccount> findByUsername(String username);
 	public List<BankAccount> findByUsernameAndType(Set<Entry<String, AccountType>> usernamesAndAccountTypes);
+	public BankAccount findByUsernameAndType(String username, AccountType accountType);
 	void updateBankAccount(BankAccount ba);
 	void deleteBankAccount(BankAccount ba);
 	
