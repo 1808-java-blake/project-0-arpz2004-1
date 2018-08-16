@@ -122,7 +122,7 @@ public class BankAccountDatabase implements BankAccountDao {
 				transactionHistory.add(rsBA.getInt("transaction_id"));
 			}
 			bankAccount.setTransactionHistory(transactionHistory);
-			rs.close();
+			rsBA.close();
 			ps.close();
 			connection.close();
 		} catch (SQLException ex) {

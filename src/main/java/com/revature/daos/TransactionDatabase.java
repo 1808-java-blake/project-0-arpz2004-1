@@ -91,7 +91,6 @@ public class TransactionDatabase implements TransactionDao {
 			accountTypeTransferredTo = AccountType.valueOf(accountTypeTransferred);
 			bankAccountTransferredTo = bad.findByUsernameAndType(userTransferredTo, accountTypeTransferredTo);
 		}
-		rs.close();
 		return new Transaction(transactionID, amount, time, ba, transactionType, bankAccountTransferredTo);
 	}
 

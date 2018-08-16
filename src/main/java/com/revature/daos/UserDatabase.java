@@ -101,7 +101,6 @@ public class UserDatabase implements UserDao {
 		user.setLastName(rs.getString("last_name"));
 		user.setAge(rs.getInt("age"));
 		user.setAdminLevel(rs.getInt("admin_level"));
-		rs.close();
 		return user;
 	}
 
