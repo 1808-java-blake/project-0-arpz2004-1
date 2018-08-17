@@ -5,8 +5,10 @@ import java.util.Scanner;
 import com.revature.beans.BankAccount;
 import com.revature.beans.User;
 import com.revature.daos.UserDao;
+import com.revature.util.AppState;
 
 public class ShareAccountScreen implements Screen {
+	private AppState state = AppState.state;
 	private Scanner scan = new Scanner(System.in);
 	private UserDao ud = UserDao.currentUserDao;
 	private BankAccount ba;
@@ -17,7 +19,7 @@ public class ShareAccountScreen implements Screen {
 		while (!sharableAccount) {
 			AccountTypeSelectScreen accountTypeSelectScreen = new AccountTypeSelectScreen("share with another user");
 			ba = accountTypeSelectScreen.getBankAccount();
-			sharableAccount = ba.getUsername().equals(User.getCurrentUser().getUsername());
+			sharableAccount = ba.getUsername().equals(state.getCurrentUser().getUsername());
 			if (!sharableAccount) {
 				ba = null;
 				boolean validSelection = false;
@@ -46,7 +48,7 @@ public class ShareAccountScreen implements Screen {
 
 	@Override
 	public Screen start() {
-		User currentUser = User.getCurrentUser();
+		User currentUser = state.getCurrentUser();
 		User userSharedWith = null;
 		String selectedUsername;
 		boolean validUsername = false;

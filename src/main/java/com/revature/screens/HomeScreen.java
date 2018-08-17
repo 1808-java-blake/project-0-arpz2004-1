@@ -2,10 +2,10 @@ package com.revature.screens;
 
 import java.util.Scanner;
 
-import com.revature.beans.User;
+import com.revature.util.AppState;
 
 public class HomeScreen implements Screen {
-
+	private AppState state = AppState.state;
 	private Scanner scan = new Scanner(System.in);
 
 	public Screen start() {
@@ -13,7 +13,7 @@ public class HomeScreen implements Screen {
 		boolean validSelection = false;
 		do {
 			System.out.println("Please choose from following options:");
-			boolean admin = User.getCurrentUser() != null && User.getCurrentUser().isAdmin();
+			boolean admin = state.getCurrentUser() != null && state.getCurrentUser().isAdmin();
 			if(admin) {
 				System.out.println("Enter 0 to view admin screen.");
 			}
@@ -58,7 +58,7 @@ public class HomeScreen implements Screen {
 		case "7":
 			return new ShareAccountScreen();
 		case "8":
-			User.setCurrentUser(null);
+			state.setCurrentUser(null);
 			return new LoginScreen();
 		}
 		return this;

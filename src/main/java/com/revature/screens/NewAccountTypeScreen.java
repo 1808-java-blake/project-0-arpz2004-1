@@ -12,14 +12,16 @@ import com.revature.beans.BankAccount.AccountType;
 import com.revature.beans.User;
 import com.revature.daos.BankAccountDao;
 import com.revature.helpers.StringHelper;
+import com.revature.util.AppState;
 
 public class NewAccountTypeScreen implements Screen {
+	private AppState state = AppState.state;
 	private BankAccountDao bd = BankAccountDao.currentBankAccountDao;
 	private Scanner scan = new Scanner(System.in);
 
 	@Override
 	public Screen start() {
-		User user = User.getCurrentUser();
+		User user = state.getCurrentUser();
 		AccountType[] accountTypes = AccountType.values();
 		Map<Integer, AccountType> findBankAccountType = new HashMap<>();
 		List<AccountType> accountTypeList = new ArrayList<>(Arrays.asList(accountTypes));

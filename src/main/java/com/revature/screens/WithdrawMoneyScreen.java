@@ -11,8 +11,10 @@ import com.revature.beans.User;
 import com.revature.daos.BankAccountDao;
 import com.revature.daos.TransactionDao;
 import com.revature.daos.UserDao;
+import com.revature.util.AppState;
 
 public class WithdrawMoneyScreen implements Screen {
+	private AppState state = AppState.state;
 	private Scanner scan = new Scanner(System.in);
 	private BankAccountDao bad = BankAccountDao.currentBankAccountDao;
 	private TransactionDao td = TransactionDao.currentTransactionDao;
@@ -30,7 +32,7 @@ public class WithdrawMoneyScreen implements Screen {
 		if (ba != null) {
 			String selection;
 			boolean validSelection = false;
-			User u = User.getCurrentUser();
+			User u = state.getCurrentUser();
 			BigDecimal currentBalance = ba.getBalance();
 			do {
 				System.out.println("Your current bank account balance is " + ba.getBalanceString() + ".");

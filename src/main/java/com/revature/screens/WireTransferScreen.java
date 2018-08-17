@@ -11,8 +11,10 @@ import com.revature.beans.User;
 import com.revature.daos.BankAccountDao;
 import com.revature.daos.TransactionDao;
 import com.revature.daos.UserDao;
+import com.revature.util.AppState;
 
 public class WireTransferScreen implements Screen {
+	private AppState state = AppState.state;
 	private Scanner scan = new Scanner(System.in);
 	private UserDao ud = UserDao.currentUserDao;
 	private BankAccountDao bad = BankAccountDao.currentBankAccountDao;
@@ -20,7 +22,7 @@ public class WireTransferScreen implements Screen {
 
 	@Override
 	public Screen start() {
-		User currentUser = User.getCurrentUser();
+		User currentUser = state.getCurrentUser();
 		User userTransferredTo = null;
 		String selectedUsername;
 		boolean validUsername = false;

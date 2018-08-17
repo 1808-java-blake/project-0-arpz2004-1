@@ -4,8 +4,10 @@ import java.util.Scanner;
 
 import com.revature.beans.User;
 import com.revature.daos.UserDao;
+import com.revature.util.AppState;
 
 public class LoginScreen implements Screen {
+	private AppState state = AppState.state;
 	private Scanner scan = new Scanner(System.in);
 	private UserDao ud = UserDao.currentUserDao;
 
@@ -22,7 +24,7 @@ public class LoginScreen implements Screen {
 
 		User currentUser = ud.findByUsernameAndPassword(username, password);
 		if (currentUser != null) {
-			User.setCurrentUser(currentUser);
+			state.setCurrentUser(currentUser);
 			return new HomeScreen();
 		}
 

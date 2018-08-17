@@ -9,15 +9,17 @@ import com.revature.beans.BankAccount;
 import com.revature.beans.User;
 import com.revature.daos.BankAccountDao;
 import com.revature.helpers.StringHelper;
+import com.revature.util.AppState;
 
 public class AccountTypeSelectScreen implements Screen {
+	private AppState state = AppState.state;
 	private Scanner scan = new Scanner(System.in);
 	private BankAccountDao bd = BankAccountDao.currentBankAccountDao;
 	private User user;
 	private String action;
 
 	public AccountTypeSelectScreen(String action) {
-		this.user = User.getCurrentUser();
+		this.user = state.getCurrentUser();
 		this.action = action;
 	}
 

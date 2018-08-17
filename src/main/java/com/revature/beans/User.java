@@ -19,7 +19,6 @@ public class User implements Serializable {
 	private String lastName;
 	private int adminLevel;
 	private int age;
-	private static User currentUser;
 	private Set<Entry<String, AccountType>> sharedAccounts;
 
 	public User(String username, String password, String firstName, String lastName, int age) {
@@ -37,14 +36,6 @@ public class User implements Serializable {
 		super();
 		this.adminLevel = 0;
 		sharedAccounts = new HashSet<>();
-	}
-
-	public static void setCurrentUser(User currentUser) {
-		User.currentUser = currentUser;
-	}
-
-	public static User getCurrentUser() {
-		return currentUser;
 	}
 
 	public boolean isAdmin() {

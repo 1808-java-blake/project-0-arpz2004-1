@@ -7,14 +7,16 @@ import com.revature.beans.BankAccount;
 import com.revature.beans.User;
 import com.revature.daos.BankAccountDao;
 import com.revature.helpers.StringHelper;
+import com.revature.util.AppState;
 
 public class AccountBalanceScreen implements Screen {
+	private AppState state = AppState.state;
 	private Scanner scan = new Scanner(System.in);
 	private BankAccountDao bad = BankAccountDao.currentBankAccountDao;
 
 	@Override
 	public Screen start() {
-		User currentUser = User.getCurrentUser();
+		User currentUser = state.getCurrentUser();
 		List<BankAccount> bankAccountList = bad.findByUsername(currentUser.getUsername());
 		List<BankAccount> sharedBankAccountList = bad.findByUsernameAndType(currentUser.getSharedAccounts());
 		int maxUsernameLength = 0;
